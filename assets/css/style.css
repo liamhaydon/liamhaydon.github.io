@@ -244,3 +244,13 @@ footer a { color: var(--muted); }
 .timeline p, .edu p { margin: 0; }
 .when { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
 .edu { margin-top: 16px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+
+/* ---------- Shared tech accents (matches home page) ---------- */
+body {
+  background-image: radial-gradient(color-mix(in srgb, var(--muted) 22%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+}
+.brand { font-family: var(--mono); font-weight: 500; font-size: .9rem; }
+.nav a.link { font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+.eyebrow { font-family: var(--mono); font-weight: 500; letter-spacing: .08em; }

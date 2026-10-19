@@ -4,175 +4,155 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Liam Haydon · Portfolio</title>
-  <meta name="description" content="Liam Haydon — data analytics portfolio: SQL, Power BI, and data storytelling.">
+  <meta name="description" content="Liam Haydon: Information Science + Business student at CU Boulder. SQL, Power BI and data analytics.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/home.css">
 </head>
-<body>
+<body class="home">
 
-<nav class="nav">
-  <div class="container">
-    <a class="brand" href="#top">Liam Haydon</a>
-    <ul>
-      <li><a class="link" href="#about">About</a></li>
-      <li><a class="link" href="#projects">Projects</a></li>
-      <li class="hide-sm"><a class="link" href="#experience">Experience</a></li>
-      <li class="hide-sm"><a class="link" href="#skills">Skills</a></li>
-      <li><a class="link" href="#contact">Contact</a></li>
+<div class="layout">
+
+  <!-- ============ Left: identity + socials (sticky on desktop) ============ -->
+  <aside class="side">
+    <div class="path">~/liam-haydon</div>
+    <h1 class="name">Liam Haydon</h1>
+    <p class="role">Information Science + Business<br><span>@ CU Boulder</span></p>
+    <p class="pitch">I write SQL and build Power BI reports that turn sales data into decisions.</p>
+
+    <nav class="toc" aria-label="Sections">
+      <a href="#about"><span class="n">01</span><span class="bar"></span>About</a>
+      <a href="#experience"><span class="n">02</span><span class="bar"></span>Experience</a>
+      <a href="#projects"><span class="n">03</span><span class="bar"></span>Projects</a>
+      <a href="#skills"><span class="n">04</span><span class="bar"></span>Skills</a>
+    </nav>
+
+    <ul class="socials">
+      <li><a href="https://github.com/liamhaydon" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        <span>GitHub</span></a></li>
+      <li><a href="https://www.linkedin.com/in/liamhaydon/" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        <span>LinkedIn</span></a></li>
+      <li><a href="mailto:liam_haydon@outlook.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span>Email</span></a></li>
+      <li><a href="assets/Liam-Haydon-Resume.pdf" aria-label="Résumé PDF">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        <span>Résumé</span></a></li>
     </ul>
-  </div>
-</nav>
 
-<header class="hero" id="top">
-  <div class="container">
-    <!-- Swap the initials for a headshot: <img src="assets/img/headshot.jpg" alt="Liam Haydon"> -->
-    <div class="avatar">LH</div>
-    <div class="eyebrow">Information Science + Business · CU Boulder</div>
-    <h1>I turn messy data into answers people can act on.</h1>
-    <p class="lead">
-      I'm Liam, an Information Science student who uses SQL to answer business questions and Power BI to make the answers easy to see.
-    </p>
-    <div class="btns">
-      <a class="btn primary" href="projects/contoso-retail-analytics.html">View featured project →</a>
-      <a class="btn" href="assets/Liam-Haydon-Resume.pdf">Résumé (PDF)</a>
-      <a class="btn" href="https://www.linkedin.com/in/liamhaydon/">LinkedIn</a>
-      <a class="btn" href="https://github.com/liamhaydon">GitHub</a>
-    </div>
-  </div>
-</header>
+    <p class="status"><span class="dot" aria-hidden="true"></span>Open to data analytics internships · Boulder, CO &amp; SF Bay Area</p>
+  </aside>
 
-<section id="about">
-  <div class="container">
-    <div class="eyebrow">About</div>
-    <h2>Hi, I'm Liam.</h2>
-    <p>
-      I'm from the San Francisco Bay Area and studying Information Science and Business in CU Boulder's College of Media, Design &amp; Information.
-      I like starting with a vague question like "who are our best customers?" and working it down into a query, a number and a decision.
-    </p>
-    <p>
-      Before I wrote SQL against retail sales data, I worked on the other side of the register at Tommy Bahama and Bluestone Lane.
-      That's why I care about what the numbers mean for the people running the business. On campus I'm Social Chair of Pi Kappa Phi,
-      where I manage a $100,000 semester budget, and a board member of the CU Alternative Investment Club. Before college I spent four years as a varsity swimmer and water polo player.
-    </p>
-    <div class="todo">Add your expected graduation date and the roles you're targeting (e.g. "Looking for Summer 2027 data analyst internships").</div>
-  </div>
-</section>
+  <!-- ============ Right: content ============ -->
+  <main class="content">
 
-<section id="experience">
-  <div class="container">
-    <div class="eyebrow">Experience</div>
-    <h2>Leadership &amp; work</h2>
-    <ol class="timeline">
-      <li>
-        <div class="when">Jan 2026 – Present</div>
-        <h3>Board Member · CU Alternative Investment Club</h3>
-        <p class="muted">Research and present alternative investment ideas at bi-weekly meetings, grow membership through campus outreach, and recruit mentors and guest speakers.</p>
-      </li>
-      <li>
-        <div class="when">Nov 2025 – Present</div>
-        <h3>Social Chair · Pi Kappa Phi, Eta Gamma Chapter</h3>
-        <p class="muted">Manage a <strong>$100,000 semester budget</strong> for the 3rd-largest Pi Kappa Phi chapter in the nation. Negotiate with vendors, coordinate events and formals with other Greek organizations, and keep everything within city safety regulations.</p>
-      </li>
-      <li>
-        <div class="when">May – Aug 2025</div>
-        <h3>Server · Bluestone Lane, Los Altos CA</h3>
-        <p class="muted">Rotated through front-of-house roles (register, host stand, food and drink running) and kept service smooth during busy shifts.</p>
-      </li>
-      <li>
-        <div class="when">May – Sep 2024</div>
-        <h3>Sales Associate · Tommy Bahama, Palo Alto CA</h3>
-        <p class="muted">Handled sales, returns and online-order fulfillment, and built rapport with regular customers. This gave me hands-on experience of the retail data I now analyze.</p>
-      </li>
-    </ol>
-    <div class="edu">
-      <div class="when">2024 – Present</div>
-      <h3>University of Colorado Boulder</h3>
-      <p class="muted">B.S. Information Science (+ Business) · College of Media, Design &amp; Information</p>
-    </div>
-  </div>
-</section>
+    <section id="about">
+      <div class="label"><span class="kw">SELECT</span> * <span class="kw">FROM</span> about;</div>
+      <p>
+        I'm from the San Francisco Bay Area and studying <strong>Information Science and Business</strong> in CU Boulder's College of Media, Design &amp; Information.
+        I like starting with a vague question like "who are our best customers?" and working it down into a query, a number and a decision.
+      </p>
+      <p>
+        Before I wrote SQL against retail sales data, I worked on the other side of the register at Tommy Bahama and Bluestone Lane.
+        That's why I care about what the numbers mean for the people running the business. On campus I'm Social Chair of Pi Kappa Phi,
+        where I manage a <strong>$100,000 semester budget</strong>, and a board member of the CU Alternative Investment Club. Before college I spent four years as a varsity swimmer and water polo player.
+      </p>
+      <!-- TODO: add expected graduation date and the roles you're targeting -->
+    </section>
 
-<section id="projects">
-  <div class="container">
-    <div class="eyebrow">Selected work</div>
-    <h2>Projects</h2>
-    <div class="grid two">
-      <a class="card project" href="projects/contoso-retail-analytics.html">
-        <div class="thumb"><img src="assets/img/profit-by-category.png" alt="Bar chart of profit by product category from the Contoso Power BI report"></div>
-        <div class="body">
-          <h3>Contoso Retail Analytics: SQL → Power BI</h3>
-          <p class="muted">Analysis of four years of sales for a global electronics retailer. I wrote SQL with CTEs and window functions to rank products, segment repeat customers and track year-over-year growth, then built a Power BI report from the results.</p>
-          <ul class="tags"><li>SQL</li><li>Window functions</li><li>Star schema</li><li>Power BI</li></ul>
+    <section id="experience">
+      <div class="label"><span class="kw">SELECT</span> role, org <span class="kw">FROM</span> experience <span class="kw">ORDER BY</span> start <span class="kw">DESC</span>;</div>
+      <ol class="xp">
+        <li>
+          <span class="when">2026 — now</span>
+          <div>
+            <h3>Board Member <span class="org">· CU Alternative Investment Club</span></h3>
+            <p>Research and present alternative investment ideas at bi-weekly meetings, grow membership through campus outreach, and recruit mentors and guest speakers.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">2025 — now</span>
+          <div>
+            <h3>Social Chair <span class="org">· Pi Kappa Phi, Eta Gamma</span></h3>
+            <p>Manage a $100K semester budget for the 3rd-largest Pi Kappa Phi chapter in the nation. Negotiate with vendors and coordinate events across Greek life within city safety rules.</p>
+            <ul class="chips"><li>Budgeting</li><li>Negotiation</li><li>Event planning</li></ul>
+          </div>
+        </li>
+        <li>
+          <span class="when">Summer 2025</span>
+          <div>
+            <h3>Server <span class="org">· Bluestone Lane</span></h3>
+            <p>Worked every front-of-house role (register, host stand, running) and kept service smooth during busy shifts.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">Summer 2024</span>
+          <div>
+            <h3>Sales Associate <span class="org">· Tommy Bahama</span></h3>
+            <p>Handled sales, returns and online-order fulfillment, which gave me hands-on experience of the retail data I now analyze.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="edu">
+        <span class="when">2024 — now</span>
+        <div>
+          <h3>University of Colorado Boulder</h3>
+          <p>B.S. Information Science (+ Business) · College of Media, Design &amp; Information</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="label"><span class="kw">SELECT</span> * <span class="kw">FROM</span> projects <span class="kw">WHERE</span> featured = 1;</div>
+      <a class="feature" href="projects/contoso-retail-analytics.html">
+        <div class="shot"><img src="assets/img/profit-by-category.png" alt="Power BI chart of profit by product category"></div>
+        <div class="info">
+          <span class="kicker">Case study · INFO 3402</span>
+          <h3>Contoso Retail Analytics <span class="arrow">↗</span></h3>
+          <p>Four years of sales for a global electronics retailer. I wrote SQL with CTEs and window functions to rank products, segment repeat customers and track year-over-year growth, then built a Power BI report from the results.</p>
+          <ul class="chips"><li>T-SQL</li><li>Window functions</li><li>Star schema</li><li>Power BI</li></ul>
         </div>
       </a>
-      <div class="card project">
-        <div class="thumb empty">Next project coming soon</div>
-        <div class="body">
-          <h3>Your next project</h3>
-          <p class="muted">Add another class or personal project here as you build it. Two or three strong, well-explained projects beat ten thin ones.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      <a class="more" href="https://github.com/liamhaydon">More on GitHub →</a>
+    </section>
 
-<section id="skills">
-  <div class="container">
-    <div class="eyebrow">Toolkit</div>
-    <h2>Skills</h2>
-    <div class="grid three">
-      <div class="skill-group">
-        <h3>Data &amp; SQL</h3>
-        <ul>
-          <li>SQL Server / T-SQL</li>
-          <li>Joins, CTEs, subqueries</li>
-          <li>Window functions (RANK, LAG, running totals)</li>
-          <li>Dimensional modeling (star schema)</li>
-        </ul>
-      </div>
-      <div class="skill-group">
-        <h3>Visualization &amp; Web</h3>
-        <ul>
-          <li>Power BI (data model, DAX measures, report design)</li>
-          <li>Dashboard storytelling</li>
-          <li>HTML5 &amp; CSS (built this site)</li>
-          <li>Git &amp; GitHub</li>
-        </ul>
-      </div>
-      <div class="skill-group">
-        <h3>Business &amp; Leadership</h3>
-        <ul>
-          <li>Budget management ($100K/semester)</li>
-          <li>Event &amp; project planning</li>
-          <li>Vendor negotiation</li>
-          <li>Retail sales &amp; customer service</li>
-          <li>Social media content creation</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+    <section id="skills">
+      <div class="label"><span class="kw">SELECT DISTINCT</span> skill <span class="kw">FROM</span> toolkit;</div>
+      <dl class="stack">
+        <div><dt>Data</dt><dd><ul class="chips"><li>SQL Server / T-SQL</li><li>CTEs &amp; joins</li><li>Window functions</li><li>Data modeling</li></ul></dd></div>
+        <div><dt>Visualize</dt><dd><ul class="chips"><li>Power BI</li><li>DAX</li><li>Dashboard design</li></ul></dd></div>
+        <div><dt>Build</dt><dd><ul class="chips"><li>HTML5</li><li>CSS</li><li>Git &amp; GitHub</li></ul></dd></div>
+        <div><dt>Lead</dt><dd><ul class="chips"><li>$100K budget mgmt</li><li>Vendor negotiation</li><li>Retail &amp; customer service</li></ul></dd></div>
+      </dl>
+    </section>
 
-<section id="contact">
-  <div class="container">
-    <div class="eyebrow">Contact</div>
-    <h2>Let's talk.</h2>
-    <p class="lead">Based in Boulder, CO and the San Francisco Bay Area. I'm looking for data analytics and business analytics internships. The best way to reach me is by email or LinkedIn.</p>
-    <div class="btns">
-      <a class="btn primary" href="mailto:liam_haydon@outlook.com">Email me</a>
-      <a class="btn" href="https://www.linkedin.com/in/liamhaydon/">LinkedIn</a>
-    </div>
-  </div>
-</section>
+    <footer class="foot">
+      <span>-- Hand-coded in HTML &amp; CSS, hosted on GitHub Pages.</span>
+      <span>© 2026 Liam Haydon</span>
+    </footer>
+  </main>
+</div>
 
-<footer>
-  <div class="container">
-    <span>© 2026 Liam Haydon</span>
-    <span>Hand-built with HTML &amp; CSS · Hosted on GitHub Pages</span>
-  </div>
-</footer>
-
+<script>
+  // Highlight the section currently in view in the side nav
+  (function () {
+    var links = document.querySelectorAll('.toc a');
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (a) { a.classList.remove('active'); });
+          map[e.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+  })();
+</script>
 </body>
 </html>
