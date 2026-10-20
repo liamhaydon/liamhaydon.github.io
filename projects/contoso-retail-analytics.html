@@ -4,12 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contoso Retail Analytics · Liam Haydon</title>
-  <meta name="description" content="Case study: answering retail business questions with SQL (CTEs, window functions) and a Power BI report on the Contoso star schema.">
+  <meta name="description" content="Case study: a Power BI report answering retail business questions on the Contoso sales dataset.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .findings { display: grid; gap: 56px; margin-top: 32px; }
+    .finding { display: grid; gap: 24px; align-items: center; }
+    @media (min-width: 860px) {
+      .finding { grid-template-columns: 1.25fr 1fr; gap: 48px; }
+      .finding:nth-child(even) figure { order: 2; }
+    }
+    .finding .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
+    .finding h3 { font-size: 1.3rem; margin: 6px 0 10px; }
+    .finding p { color: var(--muted); margin: 0; }
+    .finding .stat { display: flex; gap: 28px; margin-top: 16px; }
+    .finding .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
+    .finding .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    @media (max-width: 560px) { .brand .muted { display: none; } }
+  </style>
 </head>
 <body>
 
@@ -17,10 +31,9 @@
   <div class="container">
     <a class="brand" href="../index.html">~/liam-haydon<span class="muted"> / contoso</span></a>
     <ul>
-      <li class="hide-sm"><a class="link" href="#model">Data model</a></li>
-      <li><a class="link" href="#sql">SQL</a></li>
-      <li><a class="link" href="#dashboard">Dashboard</a></li>
-      <li class="hide-sm"><a class="link" href="#takeaways">Takeaways</a></li>
+      <li class="hide-sm"><a class="link" href="#model">Data</a></li>
+      <li><a class="link" href="#findings">Findings</a></li>
+      <li><a class="link" href="#takeaways">Takeaways</a></li>
     </ul>
   </div>
 </nav>
@@ -30,264 +43,85 @@
     <div class="eyebrow">Case study · INFO 3402</div>
     <h1>Contoso Retail Analytics</h1>
     <p class="lead">
-      Contoso is a fictional global electronics retailer. Its sales data covers four years (2021–2024) of orders from physical stores and an online store.
-      I used SQL to answer the questions a sales manager would ask, then built a Power BI report so non-technical people can explore the answers themselves.
+      Contoso is a fictional global electronics retailer with four years (2021–2024) of sales from stores and an online shop.
+      I built a Power BI report that answers the questions a sales manager would ask, one clear chart per question.
     </p>
     <dl class="meta">
       <div><dt>Role</dt><dd>Analyst (solo)</dd></div>
-      <div><dt>Tools</dt><dd>SQL Server · Power BI</dd></div>
-      <div><dt>Data</dt><dd>Contoso star schema</dd></div>
+      <div><dt>Tools</dt><dd>Power BI · SQL</dd></div>
+      <div><dt>Data</dt><dd>Contoso sales</dd></div>
       <div><dt>Timeline</dt><dd>Fall 2026</dd></div>
     </dl>
   </div>
 </header>
 
-<section id="questions">
-  <div class="container">
-    <div class="eyebrow">The brief</div>
-    <h2>Business questions</h2>
-    <p>I started from questions a retail manager would actually ask, not from the tables. Each one maps to a query or a report page below.</p>
-    <ol class="questions">
-      <li>What are our top-selling products in each category, and how much of their category do they account for?</li>
-      <li>Who are our repeat customers, and are they worth more than one-time buyers?</li>
-      <li>How have monthly sales and profit changed from 2021 to 2024?</li>
-      <li>Which product categories are the most profitable?</li>
-      <li>How long do online customers wait for delivery?</li>
-    </ol>
-  </div>
-</section>
-
 <section id="model">
   <div class="container">
     <div class="split">
       <div>
-        <div class="eyebrow">Data model</div>
-        <h2>A star schema</h2>
+        <div class="eyebrow">The data</div>
+        <h2>How it's organized</h2>
         <p>
-          The data is organised as a <strong>star schema</strong>: one central <em>fact</em> table of transactions,
-          surrounded by <em>dimension</em> tables that describe the who, what and where of each sale.
+          The data is set up as a <strong>star schema</strong>: one central table of sales,
+          connected to tables that describe the <em>products</em>, <em>customers</em> and <em>stores</em> behind each sale.
         </p>
-        <ul class="steps">
-          <li><code>factSales</code>: one row per <strong>order line</strong> (a product within an order). It holds the numbers: <code>Quantity</code>, <code>NetPrice</code>, <code>UnitCost</code>, and the order and delivery dates.</li>
-          <li><code>dimProduct</code>: product name, brand and category.</li>
-          <li><code>dimCustomer</code>: customer name, age, gender and location.</li>
-          <li><code>dimStore</code>: store country, size and open/close dates.</li>
-        </ul>
-        <p>
-          Each dimension joins to the fact table on a key (<code>ProductKey</code>, <code>CustomerKey</code>, <code>StoreKey</code>)
-          in a one-to-many relationship. The same structure drives both my SQL joins and the Power BI model.
+        <p class="muted">
+          This structure makes it easy to slice the same sales numbers by category, customer or location,
+          which is exactly what each page of the report does.
         </p>
-        <div class="insight">
-          <strong>Metric definitions used throughout:</strong><br>
-          Revenue = <code>Quantity × NetPrice</code> &nbsp;·&nbsp;
-          Profit = <code>Quantity × (NetPrice − UnitCost)</code> &nbsp;·&nbsp;
-          Margin = Profit ÷ Revenue
+      </div>
+      <figure>
+        <img src="../assets/img/star-schema.png" alt="Power BI model view showing the sales table connected to product, customer and store tables">
+        <figcaption>The data model in Power BI: sales in the middle, with products, customers and stores around it.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="container">
+    <div class="eyebrow">The report</div>
+    <h2>Questions &amp; findings</h2>
+
+    <div class="findings">
+      <article class="finding">
+        <figure><img src="../assets/img/profit-by-category.png" alt="Column chart of profit by product category; Computers lead at $1.57M"></figure>
+        <div>
+          <span class="q-num">01</span>
+          <h3>Which product categories are the most profitable?</h3>
+          <p>Computers lead by a wide margin, earning more than twice the profit of the next category, Home Appliances.</p>
+          <div class="stat"><div><b>$1.57M</b><span>Computers</span></div><div><b>$0.69M</b><span>Home appliances</span></div></div>
         </div>
-      </div>
-      <figure>
-        <img src="../assets/img/star-schema.png" alt="Power BI model view showing factSales connected to dimProduct, dimCustomer and dimStore">
-        <figcaption>The model in Power BI: factSales sits in the middle, with a one-to-many (1 → *) relationship from each dimension.</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
+      </article>
 
-<section id="sql">
-  <div class="container">
-    <div class="eyebrow">SQL</div>
-    <h2>Three queries, three answers</h2>
-    <p class="muted">Written in T-SQL (SQL Server). Each query is also in the <a href="https://github.com/liamhaydon/liamhaydon.github.io/tree/main/sql">sql/ folder</a> of this site's repository.</p>
+      <article class="finding">
+        <figure><img src="../assets/img/top-products-volume.png" alt="Bar chart of the top 10 selling products by quantity with a category filter"></figure>
+        <div>
+          <span class="q-num">02</span>
+          <h3>What are our top-selling products?</h3>
+          <p>DVD storage binders and desktop PCs sell the most units. The category filter lets a manager focus on any one department.</p>
+        </div>
+      </article>
 
-    <!-- ===================== Q1 ===================== -->
-    <article class="query">
-      <div class="q-head"><span class="q-num">Q1</span><h3>Top 3 products by revenue in every category</h3></div>
-      <p>
-        The Power BI report ranks products by <em>volume</em>. A manager also needs to know which products bring in the most <em>money</em>,
-        and whether one product dominates its category. "Top N per group" is a classic problem: a plain <code>ORDER BY … TOP 3</code> gives the top 3 overall, not the top 3 per category.
-      </p>
-<div class="code-wrap"><pre><code class="language-sql">WITH product_revenue AS (
-    SELECT
-        p.CategoryName,
-        p.ProductName,
-        SUM(s.Quantity * s.NetPrice)                AS Revenue,
-        SUM(s.Quantity * (s.NetPrice - s.UnitCost)) AS Profit
-    FROM factSales  AS s
-    JOIN dimProduct AS p
-        ON p.ProductKey = s.ProductKey
-    GROUP BY p.CategoryName, p.ProductName
-),
-ranked AS (
-    SELECT
-        CategoryName,
-        ProductName,
-        Revenue,
-        Profit,
-        RANK() OVER (PARTITION BY CategoryName ORDER BY Revenue DESC) AS RankInCategory,
-        SUM(Revenue) OVER (PARTITION BY CategoryName)                AS CategoryRevenue
-    FROM product_revenue
-)
-SELECT
-    CategoryName,
-    RankInCategory,
-    ProductName,
-    ROUND(Revenue, 0)                           AS Revenue,
-    ROUND(100.0 * Profit  / Revenue, 1)         AS MarginPct,
-    ROUND(100.0 * Revenue / CategoryRevenue, 1) AS PctOfCategory
-FROM ranked
-WHERE RankInCategory &lt;= 3
-ORDER BY CategoryName, RankInCategory;</code></pre></div>
-      <h3>How it works</h3>
-      <ol class="steps">
-        <li><strong><code>product_revenue</code> CTE:</strong> joins each sale to its product, then <code>GROUP BY</code> category + product collapses thousands of order lines into one row per product with its total revenue and profit.</li>
-        <li><strong><code>RANK() OVER (PARTITION BY CategoryName …)</code>:</strong> a window function that restarts the ranking at 1 for every category, ordered by revenue from high to low. Unlike <code>GROUP BY</code>, it keeps every row.</li>
-        <li><strong><code>SUM(Revenue) OVER (PARTITION BY CategoryName)</code>:</strong> puts the category total next to every product row, so I can work out each product's share without a second join.</li>
-        <li><strong>Final <code>SELECT</code>:</strong> keeps ranks 1–3. The filter has to go in the outer query because SQL evaluates <code>WHERE</code> <em>before</em> window functions, so <code>WHERE RANK() …</code> isn't allowed.</li>
-      </ol>
-      <ul class="concepts"><li>CTE</li><li>INNER JOIN</li><li>GROUP BY</li><li>RANK()</li><li>PARTITION BY</li><li>windowed SUM</li></ul>
-      <div class="todo">Run the query, paste the top rows into the table below (or add a screenshot), then write a one-sentence insight. Example: "In Computers, the top 3 products make up X% of category revenue."</div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>CategoryName</th><th class="num">Rank</th><th>ProductName</th><th class="num">Revenue</th><th class="num">Margin %</th><th class="num">% of category</th></tr></thead>
-        <tbody><tr><td>…</td><td class="num">1</td><td>…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td></tr></tbody>
-      </table></div>
-    </article>
+      <article class="finding">
+        <figure><img src="../assets/img/repeat-customers.png" alt="Table of repeat customers with KPI cards showing 74 repeat customers and $319K revenue"></figure>
+        <div>
+          <span class="q-num">03</span>
+          <h3>Who are our repeat customers, and what do they buy?</h3>
+          <p>A small group of returning customers brings in meaningful revenue, and they spend most of it on computers.</p>
+          <div class="stat"><div><b>74</b><span>Repeat customers</span></div><div><b>$319K</b><span>Their revenue</span></div></div>
+        </div>
+      </article>
 
-    <!-- ===================== Q2 ===================== -->
-    <article class="query">
-      <div class="q-head"><span class="q-num">Q2</span><h3>Repeat vs. one-time customers</h3></div>
-      <p>
-        My Power BI report shows <strong>74 repeat customers</strong> generating <strong>$319K</strong>. This query checks those numbers independently
-        and adds context: what share of total revenue do repeat customers bring in, and do they spend more per order?
-      </p>
-<div class="code-wrap"><pre><code class="language-sql">WITH customer_orders AS (
-    SELECT
-        CustomerKey,
-        COUNT(DISTINCT OrderKey) AS Orders,
-        SUM(Quantity * NetPrice) AS Revenue
-    FROM factSales
-    GROUP BY CustomerKey
-),
-segmented AS (
-    SELECT
-        CustomerKey,
-        Orders,
-        Revenue,
-        CASE WHEN Orders &gt; 1 THEN 'Repeat' ELSE 'One-time' END AS Segment
-    FROM customer_orders
-)
-SELECT
-    Segment,
-    COUNT(*)                                                   AS Customers,
-    SUM(Orders)                                                AS Orders,
-    ROUND(SUM(Revenue), 0)                                     AS Revenue,
-    ROUND(SUM(Revenue) / SUM(Orders), 2)                       AS AvgOrderValue,
-    ROUND(100.0 * SUM(Revenue) / SUM(SUM(Revenue)) OVER (), 1) AS PctOfTotalRevenue
-FROM segmented
-GROUP BY Segment
-ORDER BY Revenue DESC;</code></pre></div>
-      <h3>How it works</h3>
-      <ol class="steps">
-        <li><strong><code>COUNT(DISTINCT OrderKey)</code>:</strong> <code>factSales</code> has one row per order <em>line</em>, so one order with 3 products is 3 rows. Counting distinct order keys gives true orders, not lines. This is the most important detail in the query.</li>
-        <li><strong><code>CASE WHEN</code>:</strong> labels each customer "Repeat" (more than one order) or "One-time".</li>
-        <li><strong>Second <code>GROUP BY</code>:</strong> rolls customers up into the two segments, with average order value = revenue ÷ orders.</li>
-        <li><strong><code>SUM(SUM(Revenue)) OVER ()</code>:</strong> a window function wrapped around an aggregate. The inner <code>SUM</code> is each segment's revenue. The outer <code>SUM … OVER ()</code> adds those together across all segments, which gives the grand total for the percentage.</li>
-      </ol>
-      <ul class="concepts"><li>COUNT(DISTINCT)</li><li>CASE</li><li>chained CTEs</li><li>aggregate inside a window</li><li>OVER ()</li></ul>
-      <div class="todo">Paste the 2-row result and confirm the "Repeat" row matches Power BI (74 customers, $319K). If it doesn't, explain why. That's a great interview story.</div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Segment</th><th class="num">Customers</th><th class="num">Orders</th><th class="num">Revenue</th><th class="num">Avg order value</th><th class="num">% of revenue</th></tr></thead>
-        <tbody>
-          <tr><td>One-time</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td></tr>
-          <tr><td>Repeat</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td></tr>
-        </tbody>
-      </table></div>
-    </article>
-
-    <!-- ===================== Q3 ===================== -->
-    <article class="query">
-      <div class="q-head"><span class="q-num">Q3</span><h3>Monthly sales, profit and year-over-year growth</h3></div>
-      <p>
-        A trend line only shows whether sales went up or down. Year-over-year (YoY) growth compares each month with the <em>same month last year</em>,
-        which removes seasonality (December is always bigger than February). The year-to-date running total shows progress toward annual goals.
-      </p>
-<div class="code-wrap"><pre><code class="language-sql">WITH monthly AS (
-    SELECT
-        YEAR(OrderDate)                       AS OrderYear,
-        MONTH(OrderDate)                      AS OrderMonth,
-        SUM(Quantity * NetPrice)              AS Revenue,
-        SUM(Quantity * (NetPrice - UnitCost)) AS Profit
-    FROM factSales
-    WHERE OrderDate &gt;= '2021-01-01' AND OrderDate &lt; '2025-01-01'
-    GROUP BY YEAR(OrderDate), MONTH(OrderDate)
-),
-with_prior AS (
-    SELECT
-        *,
-        LAG(Revenue) OVER (PARTITION BY OrderMonth ORDER BY OrderYear) AS RevenueLastYear
-    FROM monthly
-)
-SELECT
-    OrderYear,
-    OrderMonth,
-    ROUND(Revenue, 0)                                       AS Revenue,
-    ROUND(Profit, 0)                                        AS Profit,
-    ROUND(100.0 * Profit / Revenue, 1)                      AS MarginPct,
-    ROUND(100.0 * (Revenue - RevenueLastYear)
-                / NULLIF(RevenueLastYear, 0), 1)            AS YoYGrowthPct,
-    ROUND(SUM(Revenue) OVER (PARTITION BY OrderYear
-                             ORDER BY OrderMonth
-                             ROWS UNBOUNDED PRECEDING), 0)  AS YTDRevenue
-FROM with_prior
-ORDER BY OrderYear, OrderMonth;</code></pre></div>
-      <h3>How it works</h3>
-      <ol class="steps">
-        <li><strong><code>monthly</code> CTE:</strong> groups sales by year and month. The date filter uses <code>&gt;= start AND &lt; next-year</code> instead of <code>BETWEEN</code> so it can't miss orders late on Dec 31 if the column stores a time.</li>
-        <li><strong><code>LAG(Revenue) OVER (PARTITION BY OrderMonth ORDER BY OrderYear)</code>:</strong> within each calendar month (all the Januarys, all the Februarys…), it looks back one row, which is the same month last year. Partitioning by month is safer than <code>LAG(Revenue, 12)</code>, which would give wrong answers if any month had no sales.</li>
-        <li><strong><code>NULLIF(RevenueLastYear, 0)</code>:</strong> prevents a divide-by-zero error. 2021 has no prior year, so its growth comes back <code>NULL</code> rather than a misleading number.</li>
-        <li><strong><code>ROWS UNBOUNDED PRECEDING</code>:</strong> a running total that restarts each year (<code>PARTITION BY OrderYear</code>) and adds up every month from January through the current row.</li>
-      </ol>
-      <ul class="concepts"><li>date functions</li><li>LAG()</li><li>NULLIF</li><li>running total</li><li>window frame</li></ul>
-      <div class="todo">Add a screenshot of the result (or a Power BI line chart built from it) and one insight, e.g. "Revenue peaked in ___ and margin stayed between __% and __%."</div>
-    </article>
-  </div>
-</section>
-
-<section id="dashboard">
-  <div class="container">
-    <div class="eyebrow">Power BI</div>
-    <h2>The report</h2>
-    <p>SQL answers a question once. A report lets a manager filter and explore without writing code. Each page answers one of the business questions.</p>
-
-    <div class="gallery">
-      <figure>
-        <img src="../assets/img/top-products-volume.png" alt="Bar chart of the top 10 selling products by quantity with a category slicer">
-        <figcaption><strong>Top 10 products by volume.</strong> The category slicer lets a manager drill into any department. Storage binders and desktop PCs lead on unit sales.</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/img/profit-by-category.png" alt="Column chart of profit by product category; Computers lead at $1.57M">
-        <figcaption><strong>Most profitable categories.</strong> Computers ($1.57M) earn more than twice as much profit as the next category, Home Appliances ($0.69M).</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/img/repeat-customers.png" alt="Table of repeat customers with orders and revenue, KPI cards showing 74 repeat customers and $319K revenue">
-        <figcaption><strong>Repeat customers.</strong> 74 customers placed more than one order, bringing in $319K. Most of that went on Computers. (Checked in SQL Q2.)</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/img/delivery-wait.png" alt="Delivery wait KPIs (3.0 days average, 8 days longest), bar chart by country, and line chart falling from 2021 to 2024">
-        <figcaption><strong>Online delivery times.</strong> Average wait is 3.0 days (8 at most). It fell steadily from about 3.3 days in 2021 to 2.8 in 2024, and the Netherlands waits longest.</figcaption>
-      </figure>
-    </div>
-
-    <div class="todo">
-      Add the remaining pages when they're finished: top products and top stores by revenue, monthly sales and profit trend, spending by age group, spending by gender and location.
-      Optional: if you can use Power BI "Publish to web", embed the live report here with an &lt;iframe&gt;.
-    </div>
-
-    <h3 style="margin-top:48px">Walkthrough video</h3>
-    <div class="video">
-      <!-- Replace this block with:  <video src="../assets/walkthrough.mp4" controls></video>  or a YouTube/Loom <iframe> -->
-      <div>
-        <strong>2-minute walkthrough coming soon</strong><br>
-        <span>Record your screen (macOS: Shift-⌘-5) explaining one query and clicking through the report.</span>
-      </div>
+      <article class="finding">
+        <figure><img src="../assets/img/delivery-wait.png" alt="Delivery wait KPIs, bar chart by country, and a line chart falling from 2021 to 2024"></figure>
+        <div>
+          <span class="q-num">04</span>
+          <h3>How long do online customers wait for delivery?</h3>
+          <p>Delivery is getting faster every year, from about 3.3 days in 2021 to 2.8 in 2024. Customers in the Netherlands wait the longest.</p>
+          <div class="stat"><div><b>3.0</b><span>Avg days</span></div><div><b>8</b><span>Longest wait</span></div></div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -298,19 +132,18 @@ ORDER BY OrderYear, OrderMonth;</code></pre></div>
     <h2>What I learned</h2>
     <div class="grid three">
       <div class="card"><div class="body">
-        <h3>Know the grain</h3>
-        <p class="muted">The fact table is one row per order <em>line</em>, not per order. Mixing those up silently overcounts orders. <code>COUNT(DISTINCT OrderKey)</code> fixes it.</p>
+        <h3>Start with the question</h3>
+        <p class="muted">Each page answers one business question. Starting there kept the report focused instead of becoming a wall of charts.</p>
       </div></div>
       <div class="card"><div class="body">
-        <h3>Window functions &gt; self-joins</h3>
-        <p class="muted">Ranking, prior-year comparisons and running totals all became one line each with <code>OVER (…)</code>, instead of extra joins or subqueries.</p>
+        <h3>Know your data</h3>
+        <p class="muted">Understanding how the tables connect made it much easier to build accurate visuals and trust the numbers.</p>
       </div></div>
       <div class="card"><div class="body">
-        <h3>Cross-check your tools</h3>
-        <p class="muted">Rebuilding a Power BI number in SQL is a quick way to catch a wrong DAX measure or relationship before a stakeholder does.</p>
+        <h3>Keep it simple</h3>
+        <p class="muted">One chart, one takeaway. Clear titles and a few key numbers say more than a crowded dashboard.</p>
       </div></div>
     </div>
-    <div class="todo">Rewrite these three in your own words. Interviewers often ask "what was hard?" and "what would you do next?"</div>
   </div>
 </section>
 
@@ -321,23 +154,5 @@ ORDER BY OrderYear, OrderMonth;</code></pre></div>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
-<script>
-  // Add a "Copy" button to every code block
-  document.querySelectorAll('.code-wrap').forEach(function (wrap) {
-    var btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.type = 'button';
-    btn.textContent = 'Copy';
-    btn.addEventListener('click', function () {
-      navigator.clipboard.writeText(wrap.querySelector('code').innerText).then(function () {
-        btn.textContent = 'Copied!';
-        setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
-      });
-    });
-    wrap.prepend(btn);
-  });
-</script>
 </body>
 </html>
