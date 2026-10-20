@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <style>
     .findings { display: grid; gap: 64px; margin-top: 32px; }
@@ -26,6 +27,13 @@
     .verdict { display: grid; gap: 16px; margin-top: 8px; }
     @media (min-width: 760px) { .verdict { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 560px) { .brand .muted { display: none; } }
+    .code-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0 20px; margin-top: 16px; }
+    .code-card summary { cursor: pointer; padding: 18px 0; font-weight: 600; color: var(--ink); list-style: none; display: flex; gap: 12px; align-items: baseline; }
+    .code-card summary::-webkit-details-marker { display: none; }
+    .code-card summary::after { content: "+"; margin-left: auto; font: 500 1.2rem var(--mono); color: var(--accent); }
+    .code-card[open] summary::after { content: "−"; }
+    .code-card .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
+    .code-card pre { margin-top: 0 !important; }
   </style>
 </head>
 <body>
@@ -36,7 +44,8 @@
     <ul>
       <li class="hide-sm"><a class="link" href="#scenario">Scenario</a></li>
       <li><a class="link" href="#findings">Findings</a></li>
-      <li><a class="link" href="#recommendation">Our call</a></li>
+      <li><a class="link" href="#code">Code</a></li>
+      <li class="hide-sm"><a class="link" href="#recommendation">Our call</a></li>
     </ul>
   </div>
 </nav>
@@ -133,6 +142,53 @@
   </div>
 </section>
 
+<section id="code">
+  <div class="container">
+    <div class="eyebrow">Under the hood</div>
+    <h2>The Python behind it</h2>
+    <p class="muted">Two excerpts from our notebook (lightly trimmed). Click to expand.</p>
+
+    <details class="code-card">
+      <summary><span class="q-num">01</span> Training the model</summary>
+      <pre><code class="language-python">model = make_pipeline(SimpleImputer(strategy="median"),
+                      StandardScaler(),
+                      LogisticRegression(max_iter=300))
+model.fit(X_train, y_train)
+
+test["score"]  = model.predict_proba(X_test)[:, 1]
+test["y_pred"] = (test["score"] &gt;= THRESHOLD).astype(int)
+
+acc = accuracy_score(test["y_true"], test["y_pred"])
+auc = roc_auc_score(test["y_true"], test["score"])</code></pre>
+      <ul class="steps">
+        <li><strong>The pipeline</strong> fills in missing values, puts every feature on the same scale, then fits a logistic regression, a simple and explainable model.</li>
+        <li><strong>predict_proba</strong> gives each defendant a risk score from 0 to 1. Anyone at or above the threshold (0.5) is flagged as high-risk.</li>
+        <li><strong>Accuracy</strong> checks how often the yes/no call is right, and <strong>AUC</strong> checks how well the score ranks people overall.</li>
+      </ul>
+    </details>
+
+    <details class="code-card">
+      <summary><span class="q-num">02</span> Measuring fairness by group</summary>
+      <pre><code class="language-python">for key, g in frame.groupby(by_list, observed=True):
+    tp = int(((g[y] == 1) &amp; (g[pred] == 1)).sum())   # flagged, did re-offend
+    fp = int(((g[y] == 0) &amp; (g[pred] == 1)).sum())   # flagged, did not
+    fn = int(((g[y] == 1) &amp; (g[pred] == 0)).sum())   # missed
+    tn = int(((g[y] == 0) &amp; (g[pred] == 0)).sum())   # correctly not flagged
+    n = tp + fp + fn + tn
+
+    row["selection_rate"] = div(tp + fp, n)
+    row["FPR"] = div(fp, fp + tn)
+    row["FNR"] = div(fn, tp + fn)
+    row["PPV"] = div(tp, tp + fp)</code></pre>
+      <ul class="steps">
+        <li>For each group (each race, sex, or race × sex), we count the four outcomes: right and wrong flags, and right and wrong non-flags.</li>
+        <li><strong>Selection rate</strong> is how often a group gets flagged. <strong>FPR</strong> is how often people who didn't re-offend get flagged anyway. <strong>FNR</strong> is how often re-offenders get missed.</li>
+        <li><strong>PPV</strong> (precision) is how often a flag is correct. We double-checked every number against the Fairlearn library.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
 <section id="recommendation">
   <div class="container">
     <div class="eyebrow">Our recommendation</div>
@@ -162,5 +218,7 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 </body>
 </html>
