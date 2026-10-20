@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <style>
     .findings { display: grid; gap: 56px; margin-top: 32px; }
@@ -23,6 +24,13 @@
     .finding .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
     .finding .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
     @media (max-width: 560px) { .brand .muted { display: none; } }
+    .sql-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0 20px; margin-top: 16px; }
+    .sql-card summary { cursor: pointer; padding: 18px 0; font-weight: 600; color: var(--ink); list-style: none; display: flex; gap: 12px; align-items: baseline; }
+    .sql-card summary::-webkit-details-marker { display: none; }
+    .sql-card summary::after { content: "+"; margin-left: auto; font: 500 1.2rem var(--mono); color: var(--accent); }
+    .sql-card[open] summary::after { content: "−"; }
+    .sql-card .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
+    .sql-card pre { margin-top: 0 !important; }
     .clip { position: relative; }
     .clip video { width: 100%; display: block; border-radius: 10px; border: 1px solid var(--border); background: #f4f4f4; }
     .clip .live {
@@ -41,7 +49,8 @@
     <ul>
       <li class="hide-sm"><a class="link" href="#model">Data</a></li>
       <li><a class="link" href="#findings">Findings</a></li>
-      <li><a class="link" href="#takeaways">Takeaways</a></li>
+      <li><a class="link" href="#sql">SQL</a></li>
+      <li class="hide-sm"><a class="link" href="#takeaways">Takeaways</a></li>
     </ul>
   </div>
 </nav>
@@ -191,6 +200,51 @@
   </div>
 </section>
 
+<section id="sql">
+  <div class="container">
+    <div class="eyebrow">Under the hood</div>
+    <h2>The SQL behind it</h2>
+    <p class="muted">Two of the report's answers, written as SQL queries against the same star schema. Click to expand.</p>
+
+    <details class="sql-card">
+      <summary><span class="q-num">04</span> Which product categories are the most profitable?</summary>
+      <pre><code class="language-sql">SELECT
+    p.CategoryName,
+    SUM(s.Quantity * (s.NetPrice - s.UnitCost)) AS Profit
+FROM factSales AS s
+JOIN dimProduct AS p
+    ON s.ProductKey = p.ProductKey
+GROUP BY p.CategoryName
+ORDER BY Profit DESC;</code></pre>
+      <ul class="steps">
+        <li><strong>JOIN</strong> connects each sale to its product, so we know its category.</li>
+        <li>Profit for each sale = quantity × (selling price − cost), and <strong>SUM</strong> adds it up.</li>
+        <li><strong>GROUP BY</strong> gives one total per category, and <strong>ORDER BY … DESC</strong> puts the most profitable first.</li>
+      </ul>
+    </details>
+
+    <details class="sql-card">
+      <summary><span class="q-num">05</span> Who are our repeat customers?</summary>
+      <pre><code class="language-sql">SELECT
+    c.GivenName,
+    c.Surname,
+    COUNT(DISTINCT s.OrderKey)   AS Orders,
+    SUM(s.Quantity * s.NetPrice) AS Revenue
+FROM factSales AS s
+JOIN dimCustomer AS c
+    ON s.CustomerKey = c.CustomerKey
+GROUP BY c.CustomerKey, c.GivenName, c.Surname
+HAVING COUNT(DISTINCT s.OrderKey) &gt; 1
+ORDER BY Orders DESC, Revenue DESC;</code></pre>
+      <ul class="steps">
+        <li><strong>JOIN</strong> adds each customer's name to their sales.</li>
+        <li><strong>COUNT(DISTINCT OrderKey)</strong> counts real orders. One order can have several product lines, so a plain count would overcount.</li>
+        <li><strong>HAVING … &gt; 1</strong> keeps only customers with more than one order. It runs <em>after</em> grouping, which is why it isn't <code>WHERE</code>.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
 <section id="takeaways">
   <div class="container">
     <div class="eyebrow">Reflection</div>
@@ -219,6 +273,8 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 <script>
   // Only play clips while they're on screen; respect reduced-motion settings
   (function () {
