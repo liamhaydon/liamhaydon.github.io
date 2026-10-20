@@ -23,7 +23,14 @@
     .finding .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
     .finding .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
     @media (max-width: 560px) { .brand .muted { display: none; } }
-    .finding.text-only { display: block; padding: 24px 28px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 12px; }
+    .clip { position: relative; }
+    .clip video { width: 100%; display: block; border-radius: 10px; border: 1px solid var(--border); background: #f4f4f4; }
+    .clip .live {
+      position: absolute; bottom: 10px; right: 10px; padding: 3px 8px; border-radius: 6px;
+      font: 600 .68rem var(--mono); letter-spacing: .06em; text-transform: uppercase;
+      background: rgba(20, 23, 31, .78); color: #fff;
+    }
+    .clip .live::first-letter { color: #ff5a5a; }
   </style>
 </head>
 <body>
@@ -96,24 +103,27 @@
           <span class="q-num">01</span>
           <h3>What are our top-selling products by volume in each category?</h3>
           <p>The chart shows the 10 best-selling products by units sold, and the category slicer narrows it to any one department. Overall, DVD storage binders and desktop PCs move the most units.</p>
+          
         </div>
       </article>
 
       <article class="finding">
-        <figure><img src="../assets/img/top-products-revenue.png" alt="Bar chart of the top 10 products by sales revenue, led by the Adventure Works Desktop PC2.33 XD233 Silver"></figure>
+        <figure class="clip"><video src="../assets/video/top-products-revenue.mp4" poster="../assets/video/top-products-revenue.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: filtering the top 10 products by revenue by category"></video><span class="live">● Live report</span></figure>
         <div>
           <span class="q-num">02</span>
           <h3>What are our top-selling products by revenue?</h3>
-          <p>The Adventure Works Desktop PC2.33 XD233 Silver brings in the most revenue. Adventure Works desktops and 52" LCD TVs take up almost the entire top 10.</p>
-          <div class="stat"><div><b>~$100K</b><span>Top product</span></div><div><b>10 / 10</b><span>Adventure Works</span></div></div>
+          <p>The Adventure Works Desktop PC2.33 XD233 Silver brings in the most revenue, about $99K from 87 units. Choosing a category, like Cell phones or Audio, instantly re-ranks the top 10.</p>
+          <div class="stat"><div><b>$99K</b><span>Top product</span></div><div><b>87</b><span>Units sold</span></div></div>
         </div>
       </article>
 
-      <article class="finding text-only">
+      <article class="finding">
+        <figure class="clip"><video src="../assets/video/top-stores.mp4" poster="../assets/video/top-stores.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: top 10 physical stores by revenue, filtered by country"></video><span class="live">● Live report</span></figure>
         <div>
           <span class="q-num">03</span>
           <h3>What are our top-selling stores by revenue?</h3>
-          <p>Contoso Store Nebraska is the highest-selling store by revenue. A country slicer lets you compare stores within any one market.</p>
+          <p>The online store alone outsells every physical store combined. Among physical stores, Contoso Store Nebraska leads, and the country slicer shows each market's leader, like Sachsen-Anhalt in Germany.</p>
+          <div class="stat"><div><b>$3.92M</b><span>Online</span></div><div><b>$3.38M</b><span>Physical stores</span></div></div>
         </div>
       </article>
 
@@ -146,6 +156,37 @@
           <div class="stat"><div><b>3.0</b><span>Avg days</span></div><div><b>8</b><span>Longest wait</span></div></div>
         </div>
       </article>
+
+      <article class="finding">
+        <figure class="clip"><video src="../assets/video/monthly-trend.mp4" poster="../assets/video/monthly-trend.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: monthly revenue and profit line chart filtered by year"></video><span class="live">● Live report</span></figure>
+        <div>
+          <span class="q-num">07</span>
+          <h3>How have monthly sales and profit changed from 2021 to 2024?</h3>
+          <p>Sales climbed through 2021 and peaked in February 2022 at about $421K in a single month. 2022 was the strongest year, then sales dropped sharply in early 2023 before leveling off. Profit follows revenue closely all the way.</p>
+          <div class="stat"><div><b>$7.30M</b><span>Revenue</span></div><div><b>$4.10M</b><span>Profit</span></div><div><b>$3.18M</b><span>Best year (2022)</span></div></div>
+        </div>
+      </article>
+
+      <article class="finding">
+        <figure class="clip"><video src="../assets/video/age-groups.mp4" poster="../assets/video/age-groups.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: revenue by age group with a category heat-map table"></video><span class="live">● Live report</span></figure>
+        <div>
+          <span class="q-num">08</span>
+          <h3>Which age groups spend the most, and what do they buy?</h3>
+          <p>Customers 65 and over spend the most of any age group, and computers are the top category for every age group. The shaded table makes the biggest age-and-category combinations stand out.</p>
+          <div class="stat"><div><b>65+</b><span>Top age group</span></div><div><b>$770K</b><span>65+ on computers</span></div></div>
+        </div>
+      </article>
+
+      <article class="finding">
+        <figure class="clip"><video src="../assets/video/gender-location.mp4" poster="../assets/video/gender-location.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: revenue share by gender and a decomposition tree by country and city"></video><span class="live">● Live report</span></figure>
+        <div>
+          <span class="q-num">09</span>
+          <h3>Which genders spend the most, and where do they live?</h3>
+          <p>Spending is almost evenly split between men and women. The decomposition tree breaks revenue down from gender to country to city, and the United States is the largest market for both.</p>
+          <div class="stat"><div><b>52%</b><span>Male</span></div><div><b>48%</b><span>Female</span></div></div>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -178,5 +219,20 @@
   </div>
 </footer>
 
+<script>
+  // Only play clips while they're on screen; respect reduced-motion settings
+  (function () {
+    var vids = document.querySelectorAll('.clip video');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    vids.forEach(function (v) {
+      if (still) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; }
+    });
+    if (still || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.isIntersecting ? e.target.play().catch(function () {}) : e.target.pause(); });
+    }, { threshold: 0.25 });
+    vids.forEach(function (v) { io.observe(v); });
+  })();
+</script>
 </body>
 </html>
