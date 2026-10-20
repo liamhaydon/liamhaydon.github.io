@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fairness Audit · Liam Haydon</title>
+  <meta name="description" content="Fair ML lab: auditing a recidivism risk model trained on 1.4 million Wisconsin court cases for fairness across race and sex.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .findings { display: grid; gap: 64px; margin-top: 32px; }
+    .finding .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
+    .finding h3 { font-size: 1.3rem; margin: 6px 0 10px; }
+    .finding p { color: var(--muted); margin: 0; max-width: 46rem; }
+    .finding figure { margin-top: 20px; }
+    .finding figure img { background: #fff; padding: 8px; }
+    .finding.side { display: grid; gap: 24px; align-items: center; }
+    @media (min-width: 860px) { .finding.side { grid-template-columns: 1fr 1fr; gap: 48px; } .finding.side figure { margin-top: 0; } }
+    .stat { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 16px; }
+    .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
+    .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .scenario { border-left: 4px solid var(--accent); background: var(--surface); padding: 20px 24px; border-radius: 0 12px 12px 0; margin-top: 8px; }
+    .scenario p { margin: 0; }
+    .verdict { display: grid; gap: 16px; margin-top: 8px; }
+    @media (min-width: 760px) { .verdict { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 560px) { .brand .muted { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a class="brand" href="../index.html">~/liam-haydon<span class="muted"> / fair-ml</span></a>
+    <ul>
+      <li class="hide-sm"><a class="link" href="#scenario">Scenario</a></li>
+      <li><a class="link" href="#findings">Findings</a></li>
+      <li><a class="link" href="#recommendation">Our call</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">Lab · INFO 4615 Fair Machine Learning</div>
+    <h1>Who Gets Flagged?</h1>
+    <p class="lead">
+      We trained a simple model to predict which criminal defendants would end up back in court, using 1.4 million real Wisconsin court cases.
+      Then we audited it: who does it flag, who does it get wrong, and should anyone use it?
+    </p>
+    <dl class="meta">
+      <div><dt>Team</dt><dd>Liam Haydon &amp; Liku Strom</dd></div>
+      <div><dt>Tools</dt><dd>Python · scikit-learn · Fairlearn</dd></div>
+      <div><dt>Data</dt><dd>WCLD · 1.48M cases</dd></div>
+      <div><dt>Timeline</dt><dd>Fall 2026</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section id="scenario">
+  <div class="container">
+    <div class="split">
+      <div>
+        <div class="eyebrow">The scenario</div>
+        <h2>A risk score for probation</h2>
+        <div class="scenario">
+          <p>A fictional court office, Northfield County, wants a risk score to decide who gets <strong>intensive probation supervision</strong>.
+          Its goal is to reduce re-offending without supervising people needlessly, and to treat defendants fairly across race and gender.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">The data</div>
+        <h2>Real court records</h2>
+        <p class="muted">
+          WCLD is a research dataset of about 1.5 million criminal cases from Wisconsin circuit courts (2000–2018).
+          Our model used sex, age, offense type and prior cases. Race was deliberately <em>left out</em> of the model,
+          so we could test whether that actually makes it fair.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="container">
+    <div class="eyebrow">The audit</div>
+    <h2>What we found</h2>
+
+    <div class="findings">
+      <article class="finding">
+        <span class="q-num">01</span>
+        <h3>The model is only modestly better than guessing</h3>
+        <p>Always predicting the most common outcome would be right 57.9% of the time. Our model reached 64.7%, close to the published benchmark for this dataset. That's a real signal, but a weak basis for decisions about someone's liberty.</p>
+        <div class="stat"><div><b>64.7%</b><span>Model accuracy</span></div><div><b>57.9%</b><span>Guessing baseline</span></div><div><b>0.68</b><span>AUC</span></div></div>
+      </article>
+
+      <article class="finding">
+        <span class="q-num">02</span>
+        <h3>Leaving race out doesn't make the model race-blind</h3>
+        <p>Even without race as an input, Native American defendants were flagged as high-risk far more often than Hispanic defendants, and more often wrongly: their false positive rate was nearly double. Adding neighborhood census data <em>widened</em> the gap in who gets flagged, because those columns act as a proxy for race.</p>
+        <div class="stat"><div><b>37% vs 22%</b><span>Flagged high-risk</span></div><div><b>26% vs 15%</b><span>Wrongly flagged</span></div></div>
+        <figure>
+          <img src="../assets/img/fairml-metrics-by-race.png" alt="Four bar charts by race: selection rate, false positive rate, false negative rate and precision, with Native American defendants highest on selection and false positive rate">
+          <figcaption>Selection rate, false positive rate (FPR), false negative rate (FNR) and precision (PPV) by race. Dashed line = overall average.</figcaption>
+        </figure>
+      </article>
+
+      <article class="finding">
+        <span class="q-num">03</span>
+        <h3>Looking at race or sex alone hides the biggest gaps</h3>
+        <p>When we crossed race with sex, the differences grew. Native American men were wrongly flagged 33% of the time, compared with 5% for Hispanic women. That gap is more than twice as large as what race-only or sex-only summaries showed. We also checked sample sizes so small groups weren't over-interpreted.</p>
+        <div class="stat"><div><b>33% vs 5%</b><span>Wrongly flagged</span></div><div><b>2.2×</b><span>Bigger than race/sex alone</span></div></div>
+        <figure>
+          <img src="../assets/img/fairml-intersections.png" alt="Heatmaps of selection rate, false positive rate, precision and sample size by race and sex">
+          <figcaption>Heatmaps by race × sex. The darkest cells, Native American men, are flagged most often and most often wrongly.</figcaption>
+        </figure>
+      </article>
+
+      <article class="finding side">
+        <div>
+          <span class="q-num">04</span>
+          <h3>You can't have every kind of fairness at once</h3>
+          <p>When two groups have different underlying rates, a model can't have equal error rates <em>and</em> equal precision at the same time. We showed this with our own numbers. Equalizing error rates nearly closed the false-positive gap but widened the precision gap, and equalizing precision blew the error gaps wide open.</p>
+          <div class="stat"><div><b>11.5 → 0.7</b><span>FPR gap (pts), equal odds</span></div><div><b>8.7 → 13.2</b><span>PPV gap (pts)</span></div></div>
+        </div>
+        <figure>
+          <img src="../assets/img/fairml-impossibility.png" alt="ROC curves for Native American and Hispanic defendants with the operating point of each fairness rule marked">
+          <figcaption>One score, two groups: each fairness rule moves the groups to different points on their curves.</figcaption>
+        </figure>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="recommendation">
+  <div class="container">
+    <div class="eyebrow">Our recommendation</div>
+    <h2>Don't use it as an automatic rule</h2>
+    <p class="lead">If Northfield uses a score at all, we'd prioritize <strong>equal error rates</strong> across groups, because wrongful flags lead to intrusive supervision. But no fairness metric fixes the deeper problems with the data.</p>
+    <div class="verdict">
+      <div class="card"><div class="body">
+        <h3>The label is flawed</h3>
+        <p class="muted">"Re-offending" really means a new Wisconsin court case, and outcomes are missing nearly twice as often for Black defendants as for white defendants.</p>
+      </div></div>
+      <div class="card"><div class="body">
+        <h3>The trade-off is real</h3>
+        <p class="muted">Choosing one kind of fairness means accepting unequal outcomes on another. That's a policy decision, not a technical one.</p>
+      </div></div>
+      <div class="card"><div class="body">
+        <h3>Keep humans in charge</h3>
+        <p class="muted">Advisory only, open to challenge, monitored by subgroup, and never the only reason someone gets added restrictions.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <a href="../index.html">← Back to portfolio</a>
+    <span>Data: Ash et al. (2023), WCLD, NeurIPS Datasets &amp; Benchmarks (CC BY-NC-SA 4.0). Northfield County is fictional.</span>
+  </div>
+</footer>
+
+</body>
+</html>
