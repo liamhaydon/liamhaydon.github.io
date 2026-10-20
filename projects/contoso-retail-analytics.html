@@ -23,6 +23,7 @@
     .finding .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
     .finding .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
     @media (max-width: 560px) { .brand .muted { display: none; } }
+    .finding.text-only { display: block; padding: 24px 28px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 12px; }
   </style>
 </head>
 <body>
@@ -62,12 +63,17 @@
         <div class="eyebrow">The data</div>
         <h2>How it's organized</h2>
         <p>
-          The data is set up as a <strong>star schema</strong>: one central table of sales,
-          connected to tables that describe the <em>products</em>, <em>customers</em> and <em>stores</em> behind each sale.
+          The data is set up as a <strong>star schema</strong>. <code>factSales</code> sits in the center with one row per item sold on an order,
+          and links to three dimension tables through <code>ProductKey</code>, <code>CustomerKey</code> and <code>StoreKey</code>.
         </p>
+        <ul class="steps">
+          <li><strong>dimProduct:</strong> what was sold (brand, category, color, list price and cost)</li>
+          <li><strong>dimCustomer:</strong> who bought it (age, gender, city and country)</li>
+          <li><strong>dimStore:</strong> where it sold, including the online store (country, size, open and close dates)</li>
+        </ul>
         <p class="muted">
-          This structure makes it easy to slice the same sales numbers by category, customer or location,
-          which is exactly what each page of the report does.
+          One product, customer or store can appear in many sales. Filters flow from the dimensions into the sales table,
+          so picking a category or country instantly updates every number in the report.
         </p>
       </div>
       <figure>
@@ -85,30 +91,48 @@
 
     <div class="findings">
       <article class="finding">
-        <figure><img src="../assets/img/profit-by-category.png" alt="Column chart of profit by product category; Computers lead at $1.57M"></figure>
+        <figure><img src="../assets/img/top-products-volume.png" alt="Bar chart of the top 10 selling products by quantity with a category filter"></figure>
         <div>
           <span class="q-num">01</span>
-          <h3>Which product categories are the most profitable?</h3>
-          <p>Computers lead by a wide margin, earning more than twice the profit of the next category, Home Appliances.</p>
-          <div class="stat"><div><b>$1.57M</b><span>Computers</span></div><div><b>$0.69M</b><span>Home appliances</span></div></div>
+          <h3>What are our top-selling products by volume in each category?</h3>
+          <p>The chart shows the 10 best-selling products by units sold, and the category slicer narrows it to any one department. Overall, DVD storage binders and desktop PCs move the most units.</p>
         </div>
       </article>
 
       <article class="finding">
-        <figure><img src="../assets/img/top-products-volume.png" alt="Bar chart of the top 10 selling products by quantity with a category filter"></figure>
+        <figure><img src="../assets/img/top-products-revenue.png" alt="Bar chart of the top 10 products by sales revenue, led by the Adventure Works Desktop PC2.33 XD233 Silver"></figure>
         <div>
           <span class="q-num">02</span>
-          <h3>What are our top-selling products?</h3>
-          <p>DVD storage binders and desktop PCs sell the most units. The category filter lets a manager focus on any one department.</p>
+          <h3>What are our top-selling products by revenue?</h3>
+          <p>The Adventure Works Desktop PC2.33 XD233 Silver brings in the most revenue. Adventure Works desktops and 52" LCD TVs take up almost the entire top 10.</p>
+          <div class="stat"><div><b>~$100K</b><span>Top product</span></div><div><b>10 / 10</b><span>Adventure Works</span></div></div>
+        </div>
+      </article>
+
+      <article class="finding text-only">
+        <div>
+          <span class="q-num">03</span>
+          <h3>What are our top-selling stores by revenue?</h3>
+          <p>Contoso Store Nebraska is the highest-selling store by revenue. A country slicer lets you compare stores within any one market.</p>
+        </div>
+      </article>
+
+      <article class="finding">
+        <figure><img src="../assets/img/profit-by-category.png" alt="Column chart of profit by product category; Computers lead at $1.57M"></figure>
+        <div>
+          <span class="q-num">04</span>
+          <h3>Which product categories are the most profitable?</h3>
+          <p>Computers are by far the most profitable category, earning more than twice as much as the next one, Home Appliances.</p>
+          <div class="stat"><div><b>$1.57M</b><span>Computers</span></div><div><b>$0.69M</b><span>Home appliances</span></div></div>
         </div>
       </article>
 
       <article class="finding">
         <figure><img src="../assets/img/repeat-customers.png" alt="Table of repeat customers with KPI cards showing 74 repeat customers and $319K revenue"></figure>
         <div>
-          <span class="q-num">03</span>
+          <span class="q-num">05</span>
           <h3>Who are our repeat customers, and what do they buy?</h3>
-          <p>A small group of returning customers brings in meaningful revenue, and they spend most of it on computers.</p>
+          <p>Jennie Price, Storm van Meeteren and Vilde Tveit are the most frequent repeat customers, with three orders each. Repeat customers spend the most on computers.</p>
           <div class="stat"><div><b>74</b><span>Repeat customers</span></div><div><b>$319K</b><span>Their revenue</span></div></div>
         </div>
       </article>
@@ -116,7 +140,7 @@
       <article class="finding">
         <figure><img src="../assets/img/delivery-wait.png" alt="Delivery wait KPIs, bar chart by country, and a line chart falling from 2021 to 2024"></figure>
         <div>
-          <span class="q-num">04</span>
+          <span class="q-num">06</span>
           <h3>How long do online customers wait for delivery?</h3>
           <p>Delivery is getting faster every year, from about 3.3 days in 2021 to 2.8 in 2024. Customers in the Netherlands wait the longest.</p>
           <div class="stat"><div><b>3.0</b><span>Avg days</span></div><div><b>8</b><span>Longest wait</span></div></div>
