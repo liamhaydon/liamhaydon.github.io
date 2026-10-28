@@ -7,40 +7,15 @@
   <meta name="description" content="Fair ML lab: auditing a recidivism risk model trained on 1.4 million Wisconsin court cases for fairness across race and sex.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <style>
-    .findings { display: grid; gap: 64px; margin-top: 32px; }
-    .finding .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
-    .finding h3 { font-size: 1.3rem; margin: 6px 0 10px; }
-    .finding p { color: var(--muted); margin: 0; max-width: 46rem; }
-    .finding figure { margin-top: 20px; }
-    .finding figure img { background: #fff; padding: 8px; }
-    .finding.side { display: grid; gap: 24px; align-items: center; }
-    @media (min-width: 860px) { .finding.side { grid-template-columns: 1fr 1fr; gap: 48px; } .finding.side figure { margin-top: 0; } }
-    .stat { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 16px; }
-    .stat b { display: block; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.02em; }
-    .stat span { font: .75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-    .scenario { border-left: 4px solid var(--accent); background: var(--surface); padding: 20px 24px; border-radius: 0 12px 12px 0; margin-top: 8px; }
-    .scenario p { margin: 0; }
-    .verdict { display: grid; gap: 16px; margin-top: 8px; }
-    @media (min-width: 760px) { .verdict { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 560px) { .brand .muted { display: none; } }
-    .code-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0 20px; margin-top: 16px; }
-    .code-card summary { cursor: pointer; padding: 18px 0; font-weight: 600; color: var(--ink); list-style: none; display: flex; gap: 12px; align-items: baseline; }
-    .code-card summary::-webkit-details-marker { display: none; }
-    .code-card summary::after { content: "+"; margin-left: auto; font: 500 1.2rem var(--mono); color: var(--accent); }
-    .code-card[open] summary::after { content: "−"; }
-    .code-card .q-num { font: 600 .8rem var(--mono); color: var(--accent); }
-    .code-card pre { margin-top: 0 !important; }
-  </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="container">
-    <a class="brand" href="../index.html">~/liam-haydon<span class="muted"> / fair-ml</span></a>
+    <a class="brand" href="../index.html"><span class="mark">LH</span><span class="full">Liam Haydon</span><span class="muted"> / Fair ML</span></a>
     <ul>
       <li class="hide-sm"><a class="link" href="#scenario">Scenario</a></li>
       <li><a class="link" href="#findings">Findings</a></li>
@@ -50,7 +25,7 @@
   </div>
 </nav>
 
-<header class="hero">
+<header class="hero" data-mark="LH">
   <div class="container">
     <div class="eyebrow">Lab · INFO 4615 Fair Machine Learning</div>
     <h1>Who Gets Flagged?</h1>
