@@ -201,12 +201,6 @@ section + section { border-top: 1px solid var(--border); }
 .project:hover .read i { transform: translateX(4px); }
 
 /* ---------- Home: about ---------- */
-.about { display: grid; gap: 32px; }
-@media (min-width: 820px) { .about { grid-template-columns: 1fr 2.2fr; gap: 56px; } }
-.about .pull {
-  font: 600 1.35rem/1.35 var(--serif); color: var(--text);
-  border-left: 3px solid var(--gold); padding-left: 18px; margin: 0;
-}
 
 /* ---------- Home: experience + skills ---------- */
 .two-col { display: grid; gap: 56px; }
@@ -319,3 +313,28 @@ footer a { color: var(--gold); }
   .hero { padding: 64px 0 56px; }
   .hero::before { font-size: 9rem; bottom: -36px; right: -6px; }
 }
+
+/* ---------- Home hero: Flatirons photo ---------- */
+.hero.photo {
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, .88) 0%, rgba(10, 10, 10, .66) 48%, rgba(10, 10, 10, .18) 100%),
+    url("../img/flatirons-hero.jpg") center 35% / cover no-repeat,
+    var(--band);
+  padding: 120px 0 104px;
+}
+@media (max-width: 900px) {
+  .hero.photo {
+    background:
+      linear-gradient(180deg, rgba(10, 10, 10, .55) 0%, rgba(10, 10, 10, .82) 60%, rgba(10, 10, 10, .9) 100%),
+      url("../img/flatirons-hero-1200.jpg") 70% 30% / cover no-repeat,
+      var(--band);
+    padding: 96px 0 80px;
+  }
+}
+.hero.photo::before { content: none; }
+.hero.photo .lead { color: #d9d5cc; }
+.hero .credit {
+  position: absolute; right: 14px; bottom: 10px; z-index: 1;
+  font-size: .7rem; color: rgba(255, 255, 255, .6);
+}
+.hero .credit a { color: rgba(255, 255, 255, .75); }
