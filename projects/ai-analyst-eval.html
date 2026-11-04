@@ -156,7 +156,7 @@
         <div>
           <span class="q-num">01</span>
           <h3>Where definitions matter, the semantic layer wins for every model</h3>
-          <p>On questions like average order value or GMV, the SQL usually forgot to leave out canceled orders. That's a small mistake that looks believable: 158.37 instead of 159.77. Through the semantic layer, the filter is part of the metric, so the model can't forget it. It was the one result that held for all three models.</p>
+          <p>On questions like average order value or GMV, the SQL usually forgot to leave out canceled orders. That's a small mistake that looks believable: 158.37 instead of 159.77. Through the semantic layer, the filter is part of the metric, so the model can't forget it. It was the one result that held for all three models. The same mistake showed up on join and time questions too: across all wrong answers, a broken metric definition caused 66 SQL failures and only 7 in the semantic layer.</p>
           <div class="stat">
             <div><b>+50 pts</b><span>Definition questions, C vs A, all models</span></div>
             <div><b>+22 to +75</b><span>95% interval</span></div>
@@ -217,7 +217,7 @@
 
     <div class="chart-card" id="fail-card" style="margin-top:56px">
       <h3>Why answers were wrong</h3>
-      <p class="sub">Wrong answers across the three models, by the main types of failure. A script labeled each one first, and I checked a sample by hand.</p>
+      <p class="sub">Wrong answers across the three models, by the main types of failure. A script labeled each one; 20 were then checked by reading the query, and the script's first guess matched 13 of them.</p>
       <ul class="legend">
         <li><span class="swatch" style="background:var(--cA)"></span>A · Schema only</li>
         <li><span class="swatch" style="background:var(--cB)"></span>B · Schema + docs</li>
@@ -327,13 +327,13 @@
   // ---------- Failure types (all three models) ----------
   var fail = [
     ["Answered the unanswerable", 34, 34, 29],
-    ["Wrong metric definition", 20, 23, 7],
-    ["Wrong time filter", 17, 18, 22],
+    ["Wrong metric definition", 34, 32, 7],
     ["Invented a column or metric", 19, 22, 11],
-    ["Not in the semantic layer", 0, 0, 21],
-    ["Wrong join", 11, 8, 10],
-    ["Other wrong logic", 9, 5, 11],
-    ["Broken query", 11, 8, 2]
+    ["Wrong time filter", 9, 13, 27],
+    ["Not in the semantic layer", 0, 0, 23],
+    ["Broken query", 11, 8, 2],
+    ["Other wrong logic", 9, 3, 9],
+    ["Wrong join", 5, 6, 5]
   ];
 
   // Charts are drawn at the real container width, so text stays readable on a phone.
