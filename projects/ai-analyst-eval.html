@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/style.css?v=5">
+  <link rel="stylesheet" href="../assets/css/style.css?v=7">
   <style>
     /* Chart colors: one per condition, validated for colorblind separation in light and dark. */
     :root { --cA: #2a78d6; --cB: #eb6834; --cC: #1baf7a; --grid: #e3e0d8; }
@@ -69,9 +69,7 @@
     <div class="eyebrow">Independent project · AI evaluation</div>
     <h1>Can I Trust the AI Analyst?</h1>
     <p class="lead">
-      Companies want AI that answers business questions straight from the data warehouse. I built a warehouse,
-      wrote questions with checked answer keys, and tested whether small AI models get the numbers right.
-      I also tested whether a semantic layer, where metric definitions are written down once, makes them more trustworthy.
+      I built a dbt and DuckDB warehouse on about 100,000 e-commerce orders, wrote 60 business questions with checked answer keys, and tested whether three small AI models get the numbers right. I also tested whether a semantic layer, where metric definitions are written down once, makes them more trustworthy.
     </p>
     <dl class="meta">
       <div><dt>Tools</dt><dd>dbt · DuckDB · MetricFlow · Python</dd></div>
@@ -255,7 +253,7 @@
   <div class="container">
     <div class="eyebrow">For a data team lead</div>
     <h2>When to trust the AI analyst</h2>
-    <p class="lead">If I were deciding whether a team should let a small model answer business questions, this is what the results tell me.</p>
+    <p class="lead">Here is how I would apply these results on a data team that is considering an AI analyst.</p>
     <div class="verdict">
       <div class="card"><div class="body">
         <h3>Put definitions in a semantic layer</h3>
@@ -285,6 +283,27 @@
       <li><strong>One run per answer.</strong> Temperature 0 and a fixed seed make runs repeatable, but they don't show how much answers would vary.</li>
     </ul>
     <p class="built"><strong>How I built it.</strong> I planned the project, chose the data and the three conditions, ran every model on my own laptop, and made the calls on what counted as right. I used an AI coding assistant as a pair programmer: it helped draft the harness, the scripts and most of the question set from my plan, and explained each piece so I could check it and change it.</p>
+  </div>
+</section>
+
+<section id="role">
+  <div class="container">
+    <div class="eyebrow">For your team</div>
+    <h2>How this applies to your role</h2>
+    <div class="bring three">
+      <div class="fit">
+        <span class="role-tag">Analytics engineer</span>
+        <p>Define each metric once in dbt and a semantic layer, so dashboards, analysts and AI tools all return the same number.</p>
+      </div>
+      <div class="fit">
+        <span class="role-tag">AI / ML evaluation</span>
+        <p>Build a test set with checked answer keys, compare setups fairly, and report accuracy with confidence intervals instead of a single score.</p>
+      </div>
+      <div class="fit">
+        <span class="role-tag">Data team adopting AI</span>
+        <p>Know where an AI answer can be trusted, and add guardrails such as a semantic layer and human review where it can't.</p>
+      </div>
+    </div>
   </div>
 </section>
 

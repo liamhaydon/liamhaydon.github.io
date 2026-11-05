@@ -347,3 +347,35 @@ footer a { color: var(--gold); }
   .project.featured h3 { font-size: 1.6rem; }
   .project.featured p { font-size: 1rem; }
 }
+
+/* ---------- What I bring / How this applies to your role ---------- */
+.bring { display: grid; gap: 20px; }
+@media (min-width: 720px) { .bring { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .bring.three { grid-template-columns: repeat(3, 1fr); } }
+.fit {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 22px 24px; border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  border-radius: var(--radius); background: var(--bg);
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.fit:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--shadow); }
+.role-tag {
+  align-self: flex-start; font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  background: var(--band); color: var(--gold); padding: 4px 9px; border-radius: 4px;
+}
+.fit h3 { margin-top: 4px; font-size: 1.2rem; }
+.fit p { margin: 0; color: var(--muted); font-size: .96rem; }
+.fit .proof { margin-top: auto; padding-top: 6px; font-size: .9rem; font-weight: 600; }
+#role { background: var(--surface); }
+#role .fit { background: var(--bg); }
+#role h2 { margin-bottom: 1.6rem; }
+
+
+/* Role fit inside project cards */
+.sec-intro { margin: -1rem 0 2rem; font-size: 1.05rem; }
+.project .brings { border-left: 2px solid var(--gold); padding: 2px 0 2px 12px; margin: 0 0 16px; }
+.project .brings-label { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.project .brings p { margin: 2px 0 8px; color: var(--text); font-size: .93rem; }
+.fit-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+.fit-tags li { font-size: .74rem; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); }
+.project:hover .fit-tags li { border-color: var(--gold); }
