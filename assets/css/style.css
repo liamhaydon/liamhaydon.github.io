@@ -338,3 +338,12 @@ footer a { color: var(--gold); }
   font-size: .7rem; color: rgba(255, 255, 255, .6);
 }
 .hero .credit a { color: rgba(255, 255, 255, .75); }
+
+/* Featured (newest) project: full-width card on desktop */
+@media (min-width: 720px) {
+  .project.featured { grid-column: 1 / -1; flex-direction: row; }
+  .project.featured .shot { flex: 0 0 54%; aspect-ratio: auto; min-height: 300px; border-bottom: 0; border-right: 1px solid var(--border); }
+  .project.featured .info { padding: 28px 30px; justify-content: center; }
+  .project.featured h3 { font-size: 1.6rem; }
+  .project.featured p { font-size: 1rem; }
+}
