@@ -3,37 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fairness Audit · Liam Haydon</title>
+  <title>Who Gets Flagged? · Liam Haydon</title>
   <meta name="description" content="Fair ML lab: auditing a recidivism risk model trained on 1.4 million Wisconsin court cases for fairness across race and sex.">
+  <link rel="canonical" href="https://liamhaydon.github.io/projects/fair-ml-risk-audit.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Who Gets Flagged? · Liam Haydon">
+  <meta property="og:description" content="Auditing a recidivism risk model trained on 1.4 million Wisconsin court cases for fairness across race and sex.">
+  <meta property="og:url" content="https://liamhaydon.github.io/projects/fair-ml-risk-audit.html">
+  <meta property="og:image" content="https://liamhaydon.github.io/assets/img/fairml-impossibility.png">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-  <link rel="stylesheet" href="../assets/css/style.css?v=7">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=12">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "Who Gets Flagged?",
+    "description": "A fairness audit of a recidivism risk model trained on 1.4 million Wisconsin court cases, measuring error rates across race and sex and recommending whether a court should use it.",
+    "url": "https://liamhaydon.github.io/projects/fair-ml-risk-audit.html",
+    "author": [
+      { "@type": "Person", "name": "Liam Haydon", "url": "https://liamhaydon.github.io/" },
+      { "@type": "Person", "name": "Liku Strom" }
+    ],
+    "keywords": "fair machine learning, Python, scikit-learn, Fairlearn, model auditing, responsible AI"
+  }
+  </script>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="container">
-    <a class="brand" href="../index.html"><span class="mark">LH</span><span class="full">Liam Haydon</span><span class="muted"> / Fair ML</span></a>
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Liam Haydon</a>
     <ul>
-      <li class="hide-sm"><a class="link" href="#scenario">Scenario</a></li>
-      <li><a class="link" href="#findings">Findings</a></li>
-      <li><a class="link" href="#code">Code</a></li>
-      <li class="hide-sm"><a class="link" href="#recommendation">Our call</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
     </ul>
   </div>
 </nav>
 
-<header class="hero" data-mark="LH">
-  <div class="container">
-    <div class="eyebrow">Lab · INFO 4615 Fair Machine Learning</div>
+<main>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Lab · INFO 4615 Fair Machine Learning</p>
     <h1>Who Gets Flagged?</h1>
     <p class="lead">
       We trained a simple model to predict which criminal defendants would end up back in court, using 1.4 million real Wisconsin court cases.
       Then we audited it: who does it flag, who does it get wrong, and should anyone use it?
     </p>
-    <dl class="meta">
+    <dl class="facts">
       <div><dt>Team</dt><dd>Liam Haydon &amp; Liku Strom</dd></div>
       <div><dt>Tools</dt><dd>Python · scikit-learn · Fairlearn</dd></div>
       <div><dt>Data</dt><dd>WCLD · 1.48M cases</dd></div>
@@ -43,47 +64,39 @@
 </header>
 
 <section id="scenario">
-  <div class="container">
-    <div class="split">
-      <div>
-        <div class="eyebrow">The scenario</div>
-        <h2>A risk score for probation</h2>
-        <div class="scenario">
-          <p>A fictional court office, Northfield County, wants a risk score to decide who gets <strong>intensive probation supervision</strong>.
-          Its goal is to reduce re-offending without supervising people needlessly, and to treat defendants fairly across race and gender.</p>
-        </div>
-      </div>
-      <div>
-        <div class="eyebrow">The data</div>
-        <h2>Real court records</h2>
-        <p class="muted">
-          WCLD is a research dataset of about 1.5 million criminal cases from Wisconsin circuit courts (2000–2018).
-          Our model used sex, age, offense type and prior cases. Race was deliberately <em>left out</em> of the model,
-          so we could test whether that actually makes it fair.
-        </p>
-      </div>
+  <div class="wrap two">
+    <div>
+      <h2>A risk score for probation</h2>
+      <p class="note">A fictional court office, Northfield County, wants a risk score to decide who gets <strong>intensive probation supervision</strong>.
+      Its goal is to reduce re-offending without supervising people needlessly, and to treat defendants fairly across race and gender.</p>
+    </div>
+    <div>
+      <h2>Real court records</h2>
+      <p class="muted">
+        WCLD is a research dataset of about 1.5 million criminal cases from Wisconsin circuit courts (2000–2018).
+        Our model used sex, age, offense type and prior cases. Race was deliberately <em>left out</em> of the model,
+        so we could test whether that actually makes it fair.
+      </p>
     </div>
   </div>
 </section>
 
+<!-- FINDINGS: numbered automatically. -->
 <section id="findings">
-  <div class="container">
-    <div class="eyebrow">The audit</div>
+  <div class="wrap">
     <h2>What we found</h2>
-
     <div class="findings">
+
       <article class="finding">
-        <span class="q-num">01</span>
         <h3>The model is only modestly better than guessing</h3>
         <p>Always predicting the most common outcome would be right 57.9% of the time. Our model reached 64.7%, close to the published benchmark for this dataset. That's a real signal, but a weak basis for decisions about someone's liberty.</p>
-        <div class="stat"><div><b>64.7%</b><span>Model accuracy</span></div><div><b>57.9%</b><span>Guessing baseline</span></div><div><b>0.68</b><span>AUC</span></div></div>
+        <ul class="stats"><li><b>64.7%</b>Model accuracy</li><li><b>57.9%</b>Guessing baseline</li><li><b>0.68</b>AUC</li></ul>
       </article>
 
       <article class="finding">
-        <span class="q-num">02</span>
         <h3>Leaving race out doesn't make the model race-blind</h3>
         <p>Even without race as an input, Native American defendants were flagged as high-risk far more often than Hispanic defendants, and more often wrongly: their false positive rate was nearly double. Adding neighborhood census data <em>widened</em> the gap in who gets flagged, because those columns act as a proxy for race.</p>
-        <div class="stat"><div><b>37% vs 22%</b><span>Flagged high-risk</span></div><div><b>26% vs 15%</b><span>Wrongly flagged</span></div></div>
+        <ul class="stats"><li><b>37% vs 22%</b>Flagged high-risk</li><li><b>26% vs 15%</b>Wrongly flagged</li></ul>
         <figure>
           <img src="../assets/img/fairml-metrics-by-race.png" alt="Four bar charts by race: selection rate, false positive rate, false negative rate and precision, with Native American defendants highest on selection and false positive rate">
           <figcaption>Selection rate, false positive rate (FPR), false negative rate (FNR) and precision (PPV) by race. Dashed line = overall average.</figcaption>
@@ -91,41 +104,37 @@
       </article>
 
       <article class="finding">
-        <span class="q-num">03</span>
         <h3>Looking at race or sex alone hides the biggest gaps</h3>
         <p>When we crossed race with sex, the differences grew. Native American men were wrongly flagged 33% of the time, compared with 5% for Hispanic women. That gap is more than twice as large as what race-only or sex-only summaries showed. We also checked sample sizes so small groups weren't over-interpreted.</p>
-        <div class="stat"><div><b>33% vs 5%</b><span>Wrongly flagged</span></div><div><b>2.2×</b><span>Bigger than race/sex alone</span></div></div>
+        <ul class="stats"><li><b>33% vs 5%</b>Wrongly flagged</li><li><b>2.2×</b>Bigger than race/sex alone</li></ul>
         <figure>
           <img src="../assets/img/fairml-intersections.png" alt="Heatmaps of selection rate, false positive rate, precision and sample size by race and sex">
           <figcaption>Heatmaps by race × sex. The darkest cells, Native American men, are flagged most often and most often wrongly.</figcaption>
         </figure>
       </article>
 
-      <article class="finding side">
-        <div>
-          <span class="q-num">04</span>
-          <h3>You can't have every kind of fairness at once</h3>
-          <p>When two groups have different underlying rates, a model can't have equal error rates <em>and</em> equal precision at the same time. We showed this with our own numbers. Equalizing error rates nearly closed the false-positive gap but widened the precision gap, and equalizing precision blew the error gaps wide open.</p>
-          <div class="stat"><div><b>11.5 → 0.7</b><span>FPR gap (pts), equal odds</span></div><div><b>8.7 → 13.2</b><span>PPV gap (pts)</span></div></div>
-        </div>
-        <figure>
+      <article class="finding">
+        <h3>You can't have every kind of fairness at once</h3>
+        <p>When two groups have different underlying rates, a model can't have equal error rates <em>and</em> equal precision at the same time. We showed this with our own numbers. Equalizing error rates nearly closed the false-positive gap but widened the precision gap, and equalizing precision blew the error gaps wide open.</p>
+        <ul class="stats"><li><b>11.5 → 0.7</b>FPR gap (pts), equal odds</li><li><b>8.7 → 13.2</b>PPV gap (pts)</li></ul>
+        <figure class="narrow">
           <img src="../assets/img/fairml-impossibility.png" alt="ROC curves for Native American and Hispanic defendants with the operating point of each fairness rule marked">
           <figcaption>One score, two groups: each fairness rule moves the groups to different points on their curves.</figcaption>
         </figure>
       </article>
+
     </div>
   </div>
 </section>
 
 <section id="code">
-  <div class="container">
-    <div class="eyebrow">Under the hood</div>
+  <div class="wrap">
     <h2>The Python behind it</h2>
-    <p class="muted">Two excerpts from our notebook (lightly trimmed). Click to expand.</p>
+    <p class="muted">Two excerpts from our notebook (lightly trimmed).</p>
 
-    <details class="code-card">
-      <summary><span class="q-num">01</span> Training the model</summary>
-      <pre><code class="language-python">model = make_pipeline(SimpleImputer(strategy="median"),
+    <details>
+      <summary>Training the model</summary>
+      <pre><code>model = make_pipeline(SimpleImputer(strategy="median"),
                       StandardScaler(),
                       LogisticRegression(max_iter=300))
 model.fit(X_train, y_train)
@@ -135,16 +144,16 @@ test["y_pred"] = (test["score"] &gt;= THRESHOLD).astype(int)
 
 acc = accuracy_score(test["y_true"], test["y_pred"])
 auc = roc_auc_score(test["y_true"], test["score"])</code></pre>
-      <ul class="steps">
+      <ul class="plain-list">
         <li><strong>The pipeline</strong> fills in missing values, puts every feature on the same scale, then fits a logistic regression, a simple and explainable model.</li>
         <li><strong>predict_proba</strong> gives each defendant a risk score from 0 to 1. Anyone at or above the threshold (0.5) is flagged as high-risk.</li>
         <li><strong>Accuracy</strong> checks how often the yes/no call is right, and <strong>AUC</strong> checks how well the score ranks people overall.</li>
       </ul>
     </details>
 
-    <details class="code-card">
-      <summary><span class="q-num">02</span> Measuring fairness by group</summary>
-      <pre><code class="language-python">for key, g in frame.groupby(by_list, observed=True):
+    <details>
+      <summary>Measuring fairness by group</summary>
+      <pre><code>for key, g in frame.groupby(by_list, observed=True):
     tp = int(((g[y] == 1) &amp; (g[pred] == 1)).sum())   # flagged, did re-offend
     fp = int(((g[y] == 0) &amp; (g[pred] == 1)).sum())   # flagged, did not
     fn = int(((g[y] == 1) &amp; (g[pred] == 0)).sum())   # missed
@@ -155,7 +164,7 @@ auc = roc_auc_score(test["y_true"], test["score"])</code></pre>
     row["FPR"] = div(fp, fp + tn)
     row["FNR"] = div(fn, tp + fn)
     row["PPV"] = div(tp, tp + fp)</code></pre>
-      <ul class="steps">
+      <ul class="plain-list">
         <li>For each group (each race, sex, or race × sex), we count the four outcomes: right and wrong flags, and right and wrong non-flags.</li>
         <li><strong>Selection rate</strong> is how often a group gets flagged. <strong>FPR</strong> is how often people who didn't re-offend get flagged anyway. <strong>FNR</strong> is how often re-offenders get missed.</li>
         <li><strong>PPV</strong> (precision) is how often a flag is correct. We double-checked every number against the Fairlearn library.</li>
@@ -165,56 +174,43 @@ auc = roc_auc_score(test["y_true"], test["score"])</code></pre>
 </section>
 
 <section id="recommendation">
-  <div class="container">
-    <div class="eyebrow">Our recommendation</div>
-    <h2>Don't use it as an automatic rule</h2>
+  <div class="wrap">
+    <h2>Our recommendation: don't use it as an automatic rule</h2>
     <p class="lead">If Northfield uses a score at all, we'd prioritize <strong>equal error rates</strong> across groups, because wrongful flags lead to intrusive supervision. But no fairness metric fixes the deeper problems with the data.</p>
-    <div class="verdict">
-      <div class="card"><div class="body">
-        <h3>The label is flawed</h3>
-        <p class="muted">"Re-offending" really means a new Wisconsin court case, and outcomes are missing nearly twice as often for Black defendants as for white defendants.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>The trade-off is real</h3>
-        <p class="muted">Choosing one kind of fairness means accepting unequal outcomes on another. That's a policy decision, not a technical one.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>Keep humans in charge</h3>
-        <p class="muted">Advisory only, open to challenge, monitored by subgroup, and never the only reason someone gets added restrictions.</p>
-      </div></div>
+    <div class="three">
+      <div><h3>The label is flawed</h3><p>"Re-offending" really means a new Wisconsin court case, and outcomes are missing nearly twice as often for Black defendants as for white defendants.</p></div>
+      <div><h3>The trade-off is real</h3><p>Choosing one kind of fairness means accepting unequal outcomes on another. That's a policy decision, not a technical one.</p></div>
+      <div><h3>Keep humans in charge</h3><p>Advisory only, open to challenge, monitored by subgroup, and never the only reason someone gets added restrictions.</p></div>
     </div>
   </div>
 </section>
 
-<section id="role">
-  <div class="container">
-    <div class="eyebrow">For your team</div>
+<section id="applies">
+  <div class="wrap">
     <h2>How this applies to your role</h2>
-    <div class="bring three">
-      <div class="fit">
-        <span class="role-tag">Data scientist / ML</span>
-        <p>Measure a model's errors by group and by intersections like race × sex, not just overall accuracy.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">Responsible AI & governance</span>
-        <p>Explain fairness trade-offs to non-technical decision-makers and make a clear, evidence-based recommendation.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">Any data team</span>
-        <p>Spot proxy variables, like neighborhood data, that quietly bring bias back into a model.</p>
-      </div>
+    <div class="three">
+      <div><h3>Data scientist / ML</h3><p>Measure a model's errors by group and by intersections like race × sex, not just overall accuracy.</p></div>
+      <div><h3>Responsible AI &amp; governance</h3><p>Explain fairness trade-offs to non-technical decision-makers and make a clear, evidence-based recommendation.</p></div>
+      <div><h3>Any data team</h3><p>Spot proxy variables, like neighborhood data, that quietly bring bias back into a model.</p></div>
     </div>
   </div>
 </section>
+
+<nav class="next" aria-label="More projects">
+  <div class="wrap">
+    <a href="../index.html#work">← All projects</a>
+    <a href="ai-analyst-eval.html">Next: Can I Trust the AI Analyst? →</a>
+  </div>
+</nav>
+
+</main>
 
 <footer>
-  <div class="container">
-    <a href="../index.html">← Back to portfolio</a>
+  <div class="wrap">
+    <span>© 2026 Liam Haydon</span>
     <span>Data: Ash et al. (2023), WCLD, NeurIPS Datasets &amp; Benchmarks (CC BY-NC-SA 4.0). Northfield County is fictional.</span>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,33 @@
+# Liam Haydon
+
+> Information Science student with a Business minor at the University of Colorado Boulder (B.S. expected May 2028). Open to data analytics internships. Based in Boulder, CO and the San Francisco Bay Area.
+
+This file is a plain-text summary of https://liamhaydon.github.io/ for AI assistants and automated readers. The pages linked below hold the full detail.
+
+## Contact
+
+- Email: liam_haydon@outlook.com
+- LinkedIn: https://www.linkedin.com/in/liamhaydon/
+- GitHub: https://github.com/liamhaydon
+- Résumé (PDF): https://liamhaydon.github.io/assets/Liam-Haydon-Resume.pdf
+
+## Projects
+
+- [Can I Trust the AI Analyst?](https://liamhaydon.github.io/projects/ai-analyst-eval.html): Independent project. Built a dbt and DuckDB warehouse on about 100,000 e-commerce orders with a MetricFlow semantic layer, wrote 60 business questions with checked answer keys, and tested three small AI models (qwen2.5-coder 3B, llama3.2 3B, gemma3 4B) under three conditions. Accuracy is reported with 95% bootstrap confidence intervals. Main result: the semantic layer raised the best model from 36.7% to 61.7% correct, and from 17% to 100% on metric-definition questions. Relevant to analytics engineering, AI evaluation and BI.
+- [Contoso Retail Analytics](https://liamhaydon.github.io/projects/contoso-retail-analytics.html): Case study for INFO 3402. Set up a star schema in Power BI for four years of retail sales (2021 to 2024), answered nine business questions with one chart each, and wrote SQL for the key ones. Relevant to data analyst, business analyst and BI developer roles.
+- [Who Gets Flagged?](https://liamhaydon.github.io/projects/fair-ml-risk-audit.html): Lab for INFO 4615 Fair Machine Learning, with Liku Strom. Trained a logistic regression risk model on 1.4 million Wisconsin court cases and audited its error rates across race and sex with Python, scikit-learn and Fairlearn. Main result: the false positive rate was 33% for Native American men against 5% for Hispanic women, a gap more than twice as large as race-only or sex-only summaries showed. Relevant to data science, responsible AI and policy analytics.
+
+## Skills
+
+- Data: SQL, Python, dbt, DuckDB, relational databases, data modeling
+- AI and analytics: LLM evaluation, semantic layers (MetricFlow), fair ML auditing
+- Visualization: Power BI, Tableau, dashboard design, Figma
+- Programming: JavaScript, Java, HTML, CSS, Git and GitHub
+- Business: $100K budget management, vendor negotiation, customer service
+
+## Experience
+
+- VP of Operations, CU Alternative Investment Club (2026 to present)
+- Social Chair, Pi Kappa Phi, Eta Gamma chapter (2025 to present): manages a budget of up to $100K a semester for a chapter of about 200 members
+- Server, Bluestone Lane (summers 2025 and 2026)
+- Sales Associate, Tommy Bahama (summer 2024)

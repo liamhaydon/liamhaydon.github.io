@@ -4,36 +4,54 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contoso Retail Analytics · Liam Haydon</title>
-  <meta name="description" content="Case study: a Power BI report answering retail business questions on the Contoso sales dataset.">
+  <meta name="description" content="Case study: a star schema and Power BI report answering nine retail business questions on the Contoso sales dataset, with SQL for the key ones.">
+  <link rel="canonical" href="https://liamhaydon.github.io/projects/contoso-retail-analytics.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Contoso Retail Analytics · Liam Haydon">
+  <meta property="og:description" content="A star schema and Power BI report answering nine retail business questions, with SQL for the key ones.">
+  <meta property="og:url" content="https://liamhaydon.github.io/projects/contoso-retail-analytics.html">
+  <meta property="og:image" content="https://liamhaydon.github.io/assets/img/profit-by-category.png">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-  <link rel="stylesheet" href="../assets/css/style.css?v=7">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=12">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "Contoso Retail Analytics",
+    "description": "A star schema and Power BI report answering nine retail business questions on four years of Contoso sales data, with SQL for the key ones.",
+    "url": "https://liamhaydon.github.io/projects/contoso-retail-analytics.html",
+    "author": { "@type": "Person", "name": "Liam Haydon", "url": "https://liamhaydon.github.io/" },
+    "keywords": "Power BI, SQL, star schema, data modeling, retail analytics"
+  }
+  </script>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="container">
-    <a class="brand" href="../index.html"><span class="mark">LH</span><span class="full">Liam Haydon</span><span class="muted"> / Contoso</span></a>
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Liam Haydon</a>
     <ul>
-      <li class="hide-sm"><a class="link" href="#model">Data</a></li>
-      <li><a class="link" href="#findings">Findings</a></li>
-      <li><a class="link" href="#sql">SQL</a></li>
-      <li class="hide-sm"><a class="link" href="#takeaways">Takeaways</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
     </ul>
   </div>
 </nav>
 
-<header class="hero" data-mark="LH">
-  <div class="container">
-    <div class="eyebrow">Case study · INFO 3402</div>
+<main>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Case study · INFO 3402</p>
     <h1>Contoso Retail Analytics</h1>
     <p class="lead">
       Contoso is a fictional global electronics retailer with four years (2021–2024) of sales from stores and an online shop.
       I set up its star schema in Power BI, answered nine business questions with clear charts and visualizations per question, and wrote SQL queries for the key ones.
     </p>
-    <dl class="meta">
+    <dl class="facts">
       <div><dt>Role</dt><dd>Analyst (solo)</dd></div>
       <div><dt>Tools</dt><dd>Power BI · SQL</dd></div>
       <div><dt>Data</dt><dd>Contoso sales</dd></div>
@@ -42,128 +60,97 @@
   </div>
 </header>
 
-<section id="model">
-  <div class="container">
-    <div class="split">
-      <div>
-        <div class="eyebrow">The data</div>
-        <h2>How it's organized</h2>
-        <p>
-          The data is set up as a <strong>star schema</strong>. <code>factSales</code> sits in the center with one row per item sold on an order,
-          and links to three dimension tables through <code>ProductKey</code>, <code>CustomerKey</code> and <code>StoreKey</code>.
-        </p>
-        <ul class="steps">
-          <li><strong>dimProduct:</strong> what was sold (brand, category, color, list price and cost)</li>
-          <li><strong>dimCustomer:</strong> who bought it (age, gender, city and country)</li>
-          <li><strong>dimStore:</strong> where it sold, including the online store (country, size, open and close dates)</li>
-        </ul>
-        <p class="muted">
-          One product, customer or store can appear in many sales. Filters flow from the dimensions into the sales table,
-          so picking a category or country instantly updates every number in the report.
-        </p>
-      </div>
-      <figure>
-        <img src="../assets/img/star-schema.png" alt="Power BI model view showing the sales table connected to product, customer and store tables">
-        <figcaption>The data model in Power BI: sales in the middle, with products, customers and stores around it.</figcaption>
-      </figure>
+<section id="data">
+  <div class="wrap two">
+    <div>
+      <h2>How the data is organized</h2>
+      <p>
+        The data is set up as a <strong>star schema</strong>. <code>factSales</code> sits in the center with one row per item sold on an order,
+        and links to three dimension tables through <code>ProductKey</code>, <code>CustomerKey</code> and <code>StoreKey</code>.
+      </p>
+      <ul class="plain-list">
+        <li><strong>dimProduct:</strong> what was sold (brand, category, color, list price and cost)</li>
+        <li><strong>dimCustomer:</strong> who bought it (age, gender, city and country)</li>
+        <li><strong>dimStore:</strong> where it sold, including the online store (country, size, open and close dates)</li>
+      </ul>
+      <p class="muted">
+        One product, customer or store can appear in many sales. Filters flow from the dimensions into the sales table,
+        so picking a category or country instantly updates every number in the report.
+      </p>
     </div>
+    <figure>
+      <img src="../assets/img/star-schema.png" alt="Power BI model view showing the sales table connected to product, customer and store tables">
+      <figcaption>The data model in Power BI: sales in the middle, with products, customers and stores around it.</figcaption>
+    </figure>
   </div>
 </section>
 
+<!-- FINDINGS: numbered automatically. Recordings play only while on screen. -->
 <section id="findings">
-  <div class="container">
-    <div class="eyebrow">The report</div>
-    <h2>Questions &amp; findings</h2>
+  <div class="wrap">
+    <h2>Questions and findings</h2>
+    <div class="findings grid">
 
-    <div class="findings alt">
       <article class="finding">
         <figure><img src="../assets/img/top-products-volume.png" alt="Bar chart of the top 10 selling products by quantity with a category filter"></figure>
-        <div>
-          <span class="q-num">01</span>
-          <h3>What are our top-selling products by volume in each category?</h3>
-          <p>The chart shows the 10 best-selling products by units sold, and the category slicer narrows it to any one department. Overall, DVD storage binders and desktop PCs move the most units.</p>
-          
-        </div>
+        <h3>What are our top-selling products by volume in each category?</h3>
+        <p>The chart shows the 10 best-selling products by units sold, and the category slicer narrows it to any one department. Overall, DVD storage binders and desktop PCs move the most units.</p>
       </article>
 
       <article class="finding">
-        <figure class="clip"><video src="../assets/video/top-products-revenue.mp4" poster="../assets/video/top-products-revenue.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: filtering the top 10 products by revenue by category"></video><span class="live">● Live report</span></figure>
-        <div>
-          <span class="q-num">02</span>
-          <h3>What are our top-selling products by revenue?</h3>
-          <p>The Adventure Works Desktop PC2.33 XD233 Silver brings in the most revenue, about $99K from 87 units. Choosing a category, like Cell phones or Audio, instantly re-ranks the top 10.</p>
-          <div class="stat"><div><b>$99K</b><span>Top product</span></div><div><b>87</b><span>Units sold</span></div></div>
-        </div>
+        <figure><video src="../assets/video/top-products-revenue.mp4" poster="../assets/video/top-products-revenue.jpg" muted loop playsinline preload="metadata" aria-label="Screen recording: filtering the top 10 products by revenue by category"></video></figure>
+        <h3>What are our top-selling products by revenue?</h3>
+        <p>The Adventure Works Desktop PC2.33 XD233 Silver brings in the most revenue, about $99K from 87 units. Choosing a category, like Cell phones or Audio, instantly re-ranks the top 10.</p>
+        <ul class="stats"><li><b>$99K</b>Top product</li><li><b>87</b>Units sold</li></ul>
       </article>
 
       <article class="finding">
-        <figure class="clip"><video src="../assets/video/top-stores.mp4" poster="../assets/video/top-stores.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: top 10 physical stores by revenue, filtered by country"></video><span class="live">● Live report</span></figure>
-        <div>
-          <span class="q-num">03</span>
-          <h3>What are our top-selling stores by revenue?</h3>
-          <p>The online store alone outsells every physical store combined. Among physical stores, Contoso Store Nebraska leads, and the country slicer shows each market's leader, like Sachsen-Anhalt in Germany.</p>
-          <div class="stat"><div><b>$3.92M</b><span>Online</span></div><div><b>$3.38M</b><span>Physical stores</span></div></div>
-        </div>
+        <figure><video src="../assets/video/top-stores.mp4" poster="../assets/video/top-stores.jpg" muted loop playsinline preload="metadata" aria-label="Screen recording: top 10 physical stores by revenue, filtered by country"></video></figure>
+        <h3>What are our top-selling stores by revenue?</h3>
+        <p>The online store alone outsells every physical store combined. Among physical stores, Contoso Store Nebraska leads, and the country slicer shows each market's leader, like Sachsen-Anhalt in Germany.</p>
+        <ul class="stats"><li><b>$3.92M</b>Online</li><li><b>$3.38M</b>Physical stores</li></ul>
       </article>
 
       <article class="finding">
         <figure><img src="../assets/img/profit-by-category.png" alt="Column chart of profit by product category; Computers lead at $1.57M"></figure>
-        <div>
-          <span class="q-num">04</span>
-          <h3>Which product categories are the most profitable?</h3>
-          <p>Computers are by far the most profitable category, earning more than twice as much as the next one, Home Appliances.</p>
-          <div class="stat"><div><b>$1.57M</b><span>Computers</span></div><div><b>$0.69M</b><span>Home appliances</span></div></div>
-        </div>
+        <h3>Which product categories are the most profitable?</h3>
+        <p>Computers are by far the most profitable category, earning more than twice as much as the next one, Home Appliances.</p>
+        <ul class="stats"><li><b>$1.57M</b>Computers</li><li><b>$0.69M</b>Home appliances</li></ul>
       </article>
 
       <article class="finding">
         <figure><img src="../assets/img/repeat-customers.png" alt="Table of repeat customers with KPI cards showing 74 repeat customers and $319K revenue"></figure>
-        <div>
-          <span class="q-num">05</span>
-          <h3>Who are our repeat customers, and what do they buy?</h3>
-          <p>Jennie Price, Storm van Meeteren and Vilde Tveit are the most frequent repeat customers, with three orders each. Repeat customers spend the most on computers.</p>
-          <div class="stat"><div><b>74</b><span>Repeat customers</span></div><div><b>$319K</b><span>Their revenue</span></div></div>
-        </div>
+        <h3>Who are our repeat customers, and what do they buy?</h3>
+        <p>Jennie Price, Storm van Meeteren and Vilde Tveit are the most frequent repeat customers, with three orders each. Repeat customers spend the most on computers.</p>
+        <ul class="stats"><li><b>74</b>Repeat customers</li><li><b>$319K</b>Their revenue</li></ul>
       </article>
 
       <article class="finding">
         <figure><img src="../assets/img/delivery-wait.png" alt="Delivery wait KPIs, bar chart by country, and a line chart falling from 2021 to 2024"></figure>
-        <div>
-          <span class="q-num">06</span>
-          <h3>How long do online customers wait for delivery?</h3>
-          <p>Delivery is getting faster every year, from about 3.3 days in 2021 to 2.8 in 2024. Customers in the Netherlands wait the longest.</p>
-          <div class="stat"><div><b>3.0</b><span>Avg days</span></div><div><b>8</b><span>Longest wait</span></div></div>
-        </div>
+        <h3>How long do online customers wait for delivery?</h3>
+        <p>Delivery is getting faster every year, from about 3.3 days in 2021 to 2.8 in 2024. Customers in the Netherlands wait the longest.</p>
+        <ul class="stats"><li><b>3.0</b>Avg days</li><li><b>8</b>Longest wait</li></ul>
       </article>
 
       <article class="finding">
-        <figure class="clip"><video src="../assets/video/monthly-trend.mp4" poster="../assets/video/monthly-trend.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: monthly revenue and profit line chart filtered by year"></video><span class="live">● Live report</span></figure>
-        <div>
-          <span class="q-num">07</span>
-          <h3>How have monthly sales and profit changed from 2021 to 2024?</h3>
-          <p>Sales climbed through 2021 and peaked in February 2022 at about $421K in a single month. 2022 was the strongest year, then sales dropped sharply in early 2023 before leveling off. Profit follows revenue closely all the way.</p>
-          <div class="stat"><div><b>$7.30M</b><span>Revenue</span></div><div><b>$4.10M</b><span>Profit</span></div><div><b>$3.18M</b><span>Best year (2022)</span></div></div>
-        </div>
+        <figure><video src="../assets/video/monthly-trend.mp4" poster="../assets/video/monthly-trend.jpg" muted loop playsinline preload="metadata" aria-label="Screen recording: monthly revenue and profit line chart filtered by year"></video></figure>
+        <h3>How have monthly sales and profit changed from 2021 to 2024?</h3>
+        <p>Sales climbed through 2021 and peaked in February 2022 at about $421K in a single month. 2022 was the strongest year, then sales dropped sharply in early 2023 before leveling off. Profit follows revenue closely all the way.</p>
+        <ul class="stats"><li><b>$7.30M</b>Revenue</li><li><b>$4.10M</b>Profit</li><li><b>$3.18M</b>Best year (2022)</li></ul>
       </article>
 
       <article class="finding">
-        <figure class="clip"><video src="../assets/video/age-groups.mp4" poster="../assets/video/age-groups.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: revenue by age group with a category heat-map table"></video><span class="live">● Live report</span></figure>
-        <div>
-          <span class="q-num">08</span>
-          <h3>Which age groups spend the most, and what do they buy?</h3>
-          <p>Customers 65 and over spend the most of any age group, and computers are the top category for every age group. The shaded table makes the biggest age-and-category combinations stand out.</p>
-          <div class="stat"><div><b>65+</b><span>Top age group</span></div><div><b>$770K</b><span>65+ on computers</span></div></div>
-        </div>
+        <figure><video src="../assets/video/age-groups.mp4" poster="../assets/video/age-groups.jpg" muted loop playsinline preload="metadata" aria-label="Screen recording: revenue by age group with a category heat-map table"></video></figure>
+        <h3>Which age groups spend the most, and what do they buy?</h3>
+        <p>Customers 65 and over spend the most of any age group, and computers are the top category for every age group. The shaded table makes the biggest age-and-category combinations stand out.</p>
+        <ul class="stats"><li><b>65+</b>Top age group</li><li><b>$770K</b>65+ on computers</li></ul>
       </article>
 
       <article class="finding">
-        <figure class="clip"><video src="../assets/video/gender-location.mp4" poster="../assets/video/gender-location.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording: revenue share by gender and a decomposition tree by country and city"></video><span class="live">● Live report</span></figure>
-        <div>
-          <span class="q-num">09</span>
-          <h3>Which genders spend the most, and where do they live?</h3>
-          <p>Spending is almost evenly split between men and women. The decomposition tree breaks revenue down from gender to country to city, and the United States is the largest market for both.</p>
-          <div class="stat"><div><b>52%</b><span>Male</span></div><div><b>48%</b><span>Female</span></div></div>
-        </div>
+        <figure><video src="../assets/video/gender-location.mp4" poster="../assets/video/gender-location.jpg" muted loop playsinline preload="metadata" aria-label="Screen recording: revenue share by gender and a decomposition tree by country and city"></video></figure>
+        <h3>Which genders spend the most, and where do they live?</h3>
+        <p>Spending is almost evenly split between men and women. The decomposition tree breaks revenue down from gender to country to city, and the United States is the largest market for both.</p>
+        <ul class="stats"><li><b>52%</b>Male</li><li><b>48%</b>Female</li></ul>
       </article>
 
     </div>
@@ -171,14 +158,13 @@
 </section>
 
 <section id="sql">
-  <div class="container">
-    <div class="eyebrow">Under the hood</div>
+  <div class="wrap">
     <h2>The SQL behind it</h2>
-    <p class="muted">Two of the report's answers, written as SQL queries against the same star schema. Click to expand.</p>
+    <p class="muted">Two of the report's answers, written as SQL queries against the same star schema.</p>
 
-    <details class="sql-card">
-      <summary><span class="q-num">04</span> Which product categories are the most profitable?</summary>
-      <pre><code class="language-sql">SELECT
+    <details>
+      <summary>Which product categories are the most profitable?</summary>
+      <pre><code>SELECT
     p.CategoryName,
     SUM(s.Quantity * (s.NetPrice - s.UnitCost)) AS Profit
 FROM factSales AS s
@@ -186,16 +172,16 @@ JOIN dimProduct AS p
     ON s.ProductKey = p.ProductKey
 GROUP BY p.CategoryName
 ORDER BY Profit DESC;</code></pre>
-      <ul class="steps">
+      <ul class="plain-list">
         <li><strong>JOIN</strong> connects each sale to its product, so we know its category.</li>
         <li>Profit for each sale = quantity × (selling price − cost), and <strong>SUM</strong> adds it up.</li>
         <li><strong>GROUP BY</strong> gives one total per category, and <strong>ORDER BY … DESC</strong> puts the most profitable first.</li>
       </ul>
     </details>
 
-    <details class="sql-card">
-      <summary><span class="q-num">05</span> Who are our repeat customers?</summary>
-      <pre><code class="language-sql">SELECT
+    <details>
+      <summary>Who are our repeat customers?</summary>
+      <pre><code>SELECT
     c.GivenName,
     c.Surname,
     COUNT(DISTINCT s.OrderKey)   AS Orders,
@@ -206,7 +192,7 @@ JOIN dimCustomer AS c
 GROUP BY c.CustomerKey, c.GivenName, c.Surname
 HAVING COUNT(DISTINCT s.OrderKey) &gt; 1
 ORDER BY Orders DESC, Revenue DESC;</code></pre>
-      <ul class="steps">
+      <ul class="plain-list">
         <li><strong>JOIN</strong> adds each customer's name to their sales.</li>
         <li><strong>COUNT(DISTINCT OrderKey)</strong> counts real orders. One order can have several product lines, so a plain count would overcount.</li>
         <li><strong>HAVING … &gt; 1</strong> keeps only customers with more than one order. It runs <em>after</em> grouping, which is why it isn't <code>WHERE</code>.</li>
@@ -215,66 +201,41 @@ ORDER BY Orders DESC, Revenue DESC;</code></pre>
   </div>
 </section>
 
-<section id="takeaways">
-  <div class="container">
-    <div class="eyebrow">Reflection</div>
-    <h2>What I learned</h2>
-    <div class="grid three">
-      <div class="card"><div class="body">
-        <h3>Start with the question</h3>
-        <p class="muted">Each page answers one business question. Starting there kept the report focused instead of becoming a wall of charts.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>Know your data</h3>
-        <p class="muted">Understanding how the tables connect made it much easier to build accurate visuals and trust the numbers.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>Keep it simple</h3>
-        <p class="muted">One chart, one takeaway. Clear titles and a few key numbers say more than a crowded dashboard.</p>
-      </div></div>
+<section id="applies">
+  <div class="wrap">
+    <h2>How this applies to your role</h2>
+    <div class="three">
+      <div><h3>Data / business analyst</h3><p>Turn a stakeholder's question into a query and a chart, and state the answer in one plain sentence.</p></div>
+      <div><h3>BI developer</h3><p>Build a star-schema model and an interactive Power BI report that people can filter and explore on their own.</p></div>
+      <div><h3>Any data team</h3><p>Cross-check a dashboard number in SQL before it reaches the person making the decision.</p></div>
     </div>
   </div>
 </section>
 
-<section id="role">
-  <div class="container">
-    <div class="eyebrow">For your team</div>
-    <h2>How this applies to your role</h2>
-    <div class="bring three">
-      <div class="fit">
-        <span class="role-tag">Data / business analyst</span>
-        <p>Turn a stakeholder's question into a query and a chart, and state the answer in one plain sentence.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">BI developer</span>
-        <p>Build a star-schema model and an interactive Power BI report that people can filter and explore on their own.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">Any data team</span>
-        <p>Cross-check a dashboard number in SQL before it reaches the person making the decision.</p>
-      </div>
-    </div>
+<nav class="next" aria-label="More projects">
+  <div class="wrap">
+    <a href="../index.html#work">← All projects</a>
+    <a href="fair-ml-risk-audit.html">Next: Who Gets Flagged? →</a>
   </div>
-</section>
+</nav>
+
+</main>
 
 <footer>
-  <div class="container">
-    <a href="../index.html">← Back to portfolio</a>
+  <div class="wrap">
+    <span>© 2026 Liam Haydon</span>
     <span>Dataset: Contoso sample data (fictional retailer, used for education).</span>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 <script>
-  // Only play clips while they're on screen; respect reduced-motion settings
+  // Recordings play only while on screen. Visitors who prefer reduced motion get play controls instead.
   (function () {
-    var vids = document.querySelectorAll('.clip video');
-    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    vids.forEach(function (v) {
-      if (still) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; }
-    });
-    if (still || !('IntersectionObserver' in window)) return;
+    var vids = document.querySelectorAll('video');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      vids.forEach(function (v) { v.controls = true; });
+      return;
+    }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { e.isIntersecting ? e.target.play().catch(function () {}) : e.target.pause(); });
     }, { threshold: 0.25 });

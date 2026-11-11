@@ -5,73 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Can I Trust the AI Analyst? · Liam Haydon</title>
   <meta name="description" content="An evaluation of small AI models answering business questions with SQL, with and without a semantic layer, on a real e-commerce warehouse.">
+  <link rel="canonical" href="https://liamhaydon.github.io/projects/ai-analyst-eval.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Can I Trust the AI Analyst? · Liam Haydon">
+  <meta property="og:description" content="Testing whether small AI models get business numbers right, with and without a semantic layer.">
+  <meta property="og:url" content="https://liamhaydon.github.io/projects/ai-analyst-eval.html">
+  <meta property="og:image" content="https://liamhaydon.github.io/assets/img/ai-analyst-accuracy.png">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/style.css?v=7">
-  <style>
-    /* Chart colors: one per condition, validated for colorblind separation in light and dark. */
-    :root { --cA: #2a78d6; --cB: #eb6834; --cC: #1baf7a; --grid: #e3e0d8; }
-    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cA: #3987e5; --cB: #d95926; --cC: #199e70; --grid: #2d2c29; } }
-    :root[data-theme="dark"] { --cA: #3987e5; --cB: #d95926; --cC: #199e70; --grid: #2d2c29; }
-
-    .conditions { display: grid; gap: 20px; margin-top: 8px; }
-    @media (min-width: 760px) { .conditions { grid-template-columns: repeat(3, 1fr); } }
-    .conditions .tag { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: .85rem; margin-bottom: 8px; }
-    .swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
-
-    .chart-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 20px 14px; margin-top: 28px; position: relative; }
-    .chart-card h3 { font-family: var(--sans); font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-    .chart-card .sub { font-size: .88rem; color: var(--muted); margin: 0 0 12px; }
-    .legend { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 0 0 8px; font-size: .85rem; color: var(--muted); }
-    .legend li { display: inline-flex; align-items: center; gap: 6px; }
-    .chart svg { display: block; overflow: visible; max-width: 100%; }
-    .chart text { font: 12px var(--sans); fill: var(--muted); }
-    .chart .model { font-weight: 600; fill: var(--text); font-size: 13px; }
-    .chart .val { fill: var(--text); font-size: 12px; }
-    .tip {
-      position: absolute; pointer-events: none; background: var(--band); color: var(--band-text);
-      font-size: .82rem; padding: 8px 10px; border-radius: 6px; box-shadow: var(--shadow); opacity: 0;
-      transition: opacity .1s ease; max-width: 240px; line-height: 1.4;
-    }
-    .tip b { color: var(--gold); font-weight: 600; }
-
-    table.data { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 6px 0 18px; }
-    table.data th, table.data td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
-    table.data th:first-child, table.data td:first-child { text-align: left; }
-    table.data th { font-weight: 600; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
-    .table-wrap { overflow-x: auto; }
-    .hl { background: var(--accent-soft); font-weight: 600; }
-
-    .quote { font: 600 1.25rem/1.4 var(--serif); color: var(--text); border-left: 3px solid var(--gold); padding-left: 18px; margin: 24px 0 0; max-width: 40rem; }
-    .limits li { margin-bottom: .6rem; color: var(--muted); }
-    .limits strong { color: var(--text); }
-    .built { margin-top: 1.4rem; color: var(--muted); max-width: 70ch; }
-    .built strong { color: var(--text); }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=12">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "Can I Trust the AI Analyst?",
+    "description": "An evaluation of three small AI models answering 60 business questions on a dbt and DuckDB warehouse, comparing raw SQL with a MetricFlow semantic layer and reporting accuracy with 95% confidence intervals.",
+    "url": "https://liamhaydon.github.io/projects/ai-analyst-eval.html",
+    "author": { "@type": "Person", "name": "Liam Haydon", "url": "https://liamhaydon.github.io/" },
+    "keywords": "LLM evaluation, dbt, DuckDB, MetricFlow, semantic layer, text-to-SQL, analytics engineering"
+  }
+  </script>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="container">
-    <a class="brand" href="../index.html"><span class="mark">LH</span><span class="full">Liam Haydon</span><span class="muted"> / AI Analyst</span></a>
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Liam Haydon</a>
     <ul>
-      <li class="hide-sm"><a class="link" href="#setup">Setup</a></li>
-      <li><a class="link" href="#findings">Findings</a></li>
-      <li><a class="link" href="#trust">When to trust it</a></li>
-      <li class="hide-sm"><a class="link" href="#limits">Limits</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
     </ul>
   </div>
 </nav>
 
-<header class="hero" data-mark="LH">
-  <div class="container">
-    <div class="eyebrow">Independent project · AI evaluation</div>
+<main>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Independent project · AI evaluation</p>
     <h1>Can I Trust the AI Analyst?</h1>
     <p class="lead">
       I built a dbt and DuckDB warehouse on about 100,000 e-commerce orders, wrote 60 business questions with checked answer keys, and tested whether three small AI models get the numbers right. I also tested whether a semantic layer, where metric definitions are written down once, makes them more trustworthy.
     </p>
-    <dl class="meta">
+    <dl class="facts">
       <div><dt>Tools</dt><dd>dbt · DuckDB · MetricFlow · Python</dd></div>
       <div><dt>Models</dt><dd>qwen2.5-coder 3B · llama3.2 3B · gemma3 4B</dd></div>
       <div><dt>Data</dt><dd>Olist e-commerce · ~100k orders</dd></div>
@@ -81,10 +60,9 @@
 </header>
 
 <section id="setup">
-  <div class="container">
-    <div class="split">
+  <div class="wrap">
+    <div class="two">
       <div>
-        <div class="eyebrow">The setup</div>
         <h2>A warehouse, 60 questions, three ways to ask</h2>
         <p class="muted">
           I loaded the Olist Brazilian e-commerce data into DuckDB and modeled it with dbt into clean order, item, customer and seller tables,
@@ -97,38 +75,35 @@
         </p>
       </div>
       <div>
-        <div class="eyebrow">The rule for grading</div>
-        <div class="scenario">
-          <p><strong>Forgive the formatting, never the analysis.</strong> A missing schema name or a different date format still counts. A number that's off by more than 0.1% doesn't. The definition traps are only about 0.7% apart, so a looser grader would miss them.</p>
-        </div>
+        <h2>The rule for grading</h2>
+        <p class="note"><strong>Forgive the formatting, never the analysis.</strong> A missing schema name or a different date format still counts. A number that's off by more than 0.1% doesn't. The definition traps are only about 0.7% apart, so a looser grader would miss them.</p>
       </div>
     </div>
 
-    <div class="conditions" style="margin-top:40px">
-      <div class="card"><div class="body">
-        <span class="tag"><span class="swatch" style="background:var(--cA)"></span>A · Schema only</span>
-        <p class="muted">The model sees table and column names and writes SQL.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <span class="tag"><span class="swatch" style="background:var(--cB)"></span>B · Schema + docs</span>
-        <p class="muted">Same, plus a plain-English description of every column.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <span class="tag"><span class="swatch" style="background:var(--cC)"></span>C · Semantic layer</span>
-        <p class="muted">No SQL at all. The model picks from the list of defined metrics, and MetricFlow writes the query.</p>
-      </div></div>
+    <div class="three">
+      <div>
+        <p class="series"><span class="swatch" style="background:var(--cA)"></span>A · Schema only</p>
+        <p>The model sees table and column names and writes SQL.</p>
+      </div>
+      <div>
+        <p class="series"><span class="swatch" style="background:var(--cB)"></span>B · Schema + docs</p>
+        <p>Same, plus a plain-English description of every column.</p>
+      </div>
+      <div>
+        <p class="series"><span class="swatch" style="background:var(--cC)"></span>C · Semantic layer</p>
+        <p>No SQL at all. The model picks from the list of defined metrics, and MetricFlow writes the query.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="findings">
-  <div class="container">
-    <div class="eyebrow">The results</div>
+  <div class="wrap">
     <h2>What I found</h2>
 
     <div class="chart-card" id="acc-card">
       <h3>Share of questions answered correctly</h3>
-      <p class="sub">60 questions per model and condition. Lines show the 95% confidence interval (bootstrap, 10,000 resamples).</p>
+      <p>60 questions per model and condition. Lines show the 95% confidence interval (bootstrap, 10,000 resamples).</p>
       <ul class="legend">
         <li><span class="swatch" style="background:var(--cA)"></span>A · Schema only</li>
         <li><span class="swatch" style="background:var(--cB)"></span>B · Schema + docs</li>
@@ -136,10 +111,10 @@
       </ul>
       <div class="chart" id="acc-chart" role="img" aria-label="Accuracy with confidence intervals for three models and three conditions. qwen improves from 37% to 47% to 62%; llama and gemma score between 23% and 32% in every condition."></div>
       <div class="tip" id="tip"></div>
-      <details class="code-card" style="margin-top:10px">
+      <details>
         <summary>Show as a table</summary>
         <div class="table-wrap">
-          <table class="data">
+          <table>
             <thead><tr><th>Model</th><th>A · Schema</th><th>B · + Docs</th><th>C · Semantic</th></tr></thead>
             <tbody>
               <tr><td>qwen2.5-coder 3B</td><td>36.7% (25–48)</td><td>46.7% (33–58)</td><td>61.7% (50–73)</td></tr>
@@ -151,89 +126,58 @@
       </details>
     </div>
 
-    <div class="findings" style="margin-top:56px">
+    <!-- FINDINGS: numbered automatically. -->
+    <div class="findings">
       <article class="finding">
-        <div>
-          <span class="q-num">01</span>
-          <h3>Where definitions matter, the semantic layer wins for every model</h3>
-          <p>On questions like average order value or GMV, the SQL usually forgot to leave out canceled orders. That's a small mistake that looks believable: 158.37 instead of 159.77. Through the semantic layer, the filter is part of the metric, so the model can't forget it. It was the one result that held for all three models. The same mistake showed up on join and time questions too: across all wrong answers, a broken metric definition caused 66 SQL failures and only 7 in the semantic layer.</p>
-          <div class="stat">
-            <div><b>+50 pts</b><span>Definition questions, C vs A, all models</span></div>
-            <div><b>+22 to +75</b><span>95% interval</span></div>
-            <div><b>17% → 100%</b><span>qwen on definitions</span></div>
-          </div>
-        </div>
+        <h3>Where definitions matter, the semantic layer wins for every model</h3>
+        <p>On questions like average order value or GMV, the SQL usually forgot to leave out canceled orders. That's a small mistake that looks believable: 158.37 instead of 159.77. Through the semantic layer, the filter is part of the metric, so the model can't forget it. It was the one result that held for all three models. The same mistake showed up on join and time questions too: across all wrong answers, a broken metric definition caused 66 SQL failures and only 7 in the semantic layer.</p>
+        <ul class="stats"><li><b>+50 pts</b>Definition questions, C vs A, all models</li><li><b>+22 to +75</b>95% interval</li><li><b>17% → 100%</b>qwen on definitions</li></ul>
       </article>
 
       <article class="finding">
-        <div>
-          <span class="q-num">02</span>
-          <h3>Most of the other gaps could be noise, and I say so</h3>
-          <p>With 60 questions, each score is uncertain by about ±12 points. For qwen, the semantic layer gain is real: the interval doesn't cross zero. For llama and gemma, C scored lower, but the intervals cross zero, so I can't say it made them worse. I compared conditions on the <em>same</em> resampled questions each time, which removes question difficulty from the comparison.</p>
-          <div class="stat">
-            <div><b>+25 pts</b><span>qwen, C vs A (+7 to +43)</span></div>
-            <div><b>−7 / −8 pts</b><span>llama / gemma, C vs A (crosses 0)</span></div>
-          </div>
-        </div>
+        <h3>Most of the other gaps could be noise, and I say so</h3>
+        <p>With 60 questions, each score is uncertain by about ±12 points. For qwen, the semantic layer gain is real: the interval doesn't cross zero. For llama and gemma, C scored lower, but the intervals cross zero, so I can't say it made them worse. I compared conditions on the <em>same</em> resampled questions each time, which removes question difficulty from the comparison.</p>
+        <ul class="stats"><li><b>+25 pts</b>qwen, C vs A (+7 to +43)</li><li><b>−7 / −8 pts</b>llama / gemma, C vs A (crosses 0)</li></ul>
       </article>
 
       <article class="finding">
-        <div>
-          <span class="q-num">03</span>
-          <h3>A semantic layer only helps a model that can use it</h3>
-          <p>The semantic layer trades flexibility for safety. Simple lookups like "how many sellers are there?" dropped from 83% to 33% for qwen, because there was no metric to pick. The weaker models also struggled with the request format. MetricFlow rejected about a third of llama's requests, and llama copied the example from the prompt into its answers. It filtered to the state of Rio de Janeiro in 14 answers when only one question asked about it.</p>
-          <div class="stat">
-            <div><b>83% → 33%</b><span>qwen on lookups, A vs C</span></div>
-            <div><b>21</b><span>Wrong answers from missing metrics</span></div>
-          </div>
-        </div>
+        <h3>A semantic layer only helps a model that can use it</h3>
+        <p>The semantic layer trades flexibility for safety. Simple lookups like "how many sellers are there?" dropped from 83% to 33% for qwen, because there was no metric to pick. The weaker models also struggled with the request format. MetricFlow rejected about a third of llama's requests, and llama copied the example from the prompt into its answers. It filtered to the state of Rio de Janeiro in 14 answers when only one question asked about it.</p>
+        <ul class="stats"><li><b>83% → 33%</b>qwen on lookups, A vs C</li><li><b>21</b>Wrong answers from missing metrics</li></ul>
       </article>
 
       <article class="finding">
-        <div>
-          <span class="q-num">04</span>
-          <h3>Asked the impossible, models invent an answer</h3>
-          <p>There's no marketing data, but asked for "marketing cost per new customer," the SQL divided freight cost by customers and named the column <code>marketing_cost_per_new_customer</code>. A confident wrong answer with a believable name is the most dangerous kind. Column docs didn't stop it. A closed list of metrics stopped it for qwen in 7 of 12 cases. llama and gemma never refused a single impossible question.</p>
-          <div class="stat">
-            <div><b>58%</b><span>qwen refused correctly in C</span></div>
-            <div><b>17%</b><span>qwen in A and B</span></div>
-            <div><b>0%</b><span>llama and gemma, every condition</span></div>
-          </div>
-        </div>
+        <h3>Asked the impossible, models invent an answer</h3>
+        <p>There's no marketing data, but asked for "marketing cost per new customer," the SQL divided freight cost by customers and named the column <code>marketing_cost_per_new_customer</code>. A confident wrong answer with a believable name is the most dangerous kind. Column docs didn't stop it. A closed list of metrics stopped it for qwen in 7 of 12 cases. llama and gemma never refused a single impossible question.</p>
+        <ul class="stats"><li><b>58%</b>qwen refused correctly in C</li><li><b>17%</b>qwen in A and B</li><li><b>0%</b>llama and gemma, every condition</li></ul>
       </article>
 
       <article class="finding">
-        <div>
-          <span class="q-num">05</span>
-          <h3>I had to check my own grader, twice</h3>
-          <p>The first scores were wrong. The grader marked 9 right answers wrong because the key held extra columns. Later, a semantic-layer request written as <code>items_sold DESC</code> instead of <code>-items_sold</code> was rejected. Fixing that showed the opposite bug: an unsorted list of every state passed because the right one happened to come first. Every fix re-scored the saved answers, with no new model calls, and a self-test answering with the keys still scores 100%.</p>
-          <div class="stat">
-            <div><b>30% → 37%</b><span>qwen A after the first fix</span></div>
-            <div><b>100%</b><span>Answer-key self-test</span></div>
-          </div>
-        </div>
+        <h3>I had to check my own grader, twice</h3>
+        <p>The first scores were wrong. The grader marked 9 right answers wrong because the key held extra columns. Later, a semantic-layer request written as <code>items_sold DESC</code> instead of <code>-items_sold</code> was rejected. Fixing that showed the opposite bug: an unsorted list of every state passed because the right one happened to come first. Every fix re-scored the saved answers, with no new model calls, and a self-test answering with the keys still scores 100%.</p>
+        <ul class="stats"><li><b>30% → 37%</b>qwen A after the first fix</li><li><b>100%</b>Answer-key self-test</li></ul>
       </article>
     </div>
 
-    <div class="chart-card" id="fail-card" style="margin-top:56px">
+    <div class="chart-card" id="fail-card" style="margin-top:48px">
       <h3>Why answers were wrong</h3>
-      <p class="sub">Wrong answers across the three models, by the main types of failure. A script labeled each one; 20 were then checked by reading the query, and the script's first guess matched 13 of them.</p>
+      <p>Wrong answers across the three models, by the main types of failure. A script labeled each one; 20 were then checked by reading the query, and the script's first guess matched 13 of them.</p>
       <ul class="legend">
         <li><span class="swatch" style="background:var(--cA)"></span>A · Schema only</li>
         <li><span class="swatch" style="background:var(--cB)"></span>B · Schema + docs</li>
         <li><span class="swatch" style="background:var(--cC)"></span>C · Semantic layer</li>
       </ul>
       <div class="chart" id="fail-chart" role="img" aria-label="Wrong answers by failure type. SQL conditions fail most on wrong metric definitions and invented column names; the semantic layer fails on missing metrics and time filters."></div>
-      <details class="code-card" style="margin-top:10px">
+      <details>
         <summary>Show as a table</summary>
-        <div class="table-wrap"><table class="data" id="fail-table"></table></div>
+        <div class="table-wrap"><table id="fail-table"></table></div>
       </details>
     </div>
 
-    <details class="code-card" style="margin-top:28px">
+    <details>
       <summary>Accuracy by question type</summary>
       <div class="table-wrap">
-        <table class="data">
+        <table>
           <thead><tr><th>Type (12 each)</th><th>qwen A / B / C</th><th>llama A / B / C</th><th>gemma A / B / C</th></tr></thead>
           <tbody>
             <tr><td>Definition</td><td class="hl">17 / 25 / 100</td><td class="hl">33 / 25 / 58</td><td class="hl">17 / 8 / 58</td></tr>
@@ -250,66 +194,54 @@
 </section>
 
 <section id="trust">
-  <div class="container">
-    <div class="eyebrow">For a data team lead</div>
+  <div class="wrap">
     <h2>When to trust the AI analyst</h2>
     <p class="lead">Here is how I would apply these results on a data team that is considering an AI analyst.</p>
-    <div class="verdict">
-      <div class="card"><div class="body">
-        <h3>Put definitions in a semantic layer</h3>
-        <p class="muted">Anything with a business rule (revenue, AOV, cancellation rate) should come from a defined metric, not freshly written SQL. That's where raw SQL failed most and the semantic layer helped every model.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>Know what it can't answer</h3>
-        <p class="muted">A semantic layer only covers the metrics you define. Questions outside it fail or get forced into the wrong metric. Track which questions people ask, and add metrics for the common ones.</p>
-      </div></div>
-      <div class="card"><div class="body">
-        <h3>Keep a human on new numbers</h3>
-        <p class="muted">Small models rarely say "I can't answer that." Any number headed for a decision should show the query behind it, and someone should check it the first time.</p>
-      </div></div>
+    <div class="three">
+      <div><h3>Put definitions in a semantic layer</h3><p>Anything with a business rule (revenue, AOV, cancellation rate) should come from a defined metric, not freshly written SQL. That's where raw SQL failed most and the semantic layer helped every model.</p></div>
+      <div><h3>Know what it can't answer</h3><p>A semantic layer only covers the metrics you define. Questions outside it fail or get forced into the wrong metric. Track which questions people ask, and add metrics for the common ones.</p></div>
+      <div><h3>Keep a human on new numbers</h3><p>Small models rarely say "I can't answer that." Any number headed for a decision should show the query behind it, and someone should check it the first time.</p></div>
     </div>
     <p class="quote">The model choice mattered less than where the business logic lives. A good model with a semantic layer was the only setup I'd trust, and only for questions the layer covers.</p>
   </div>
 </section>
 
 <section id="limits">
-  <div class="container">
-    <div class="eyebrow">Being honest about it</div>
+  <div class="wrap">
     <h2>Limits of this study</h2>
-    <ul class="limits">
+    <ul class="plain-list">
       <li><strong>60 questions, not 100.</strong> I planned 100. Sixty were enough for confidence intervals to separate the main effects, and the rest are the next version.</li>
       <li><strong>Small local models only.</strong> Everything ran free on an 8 GB laptop, so the models are 3–4 billion parameters. Larger models would likely score higher in every condition. The question is whether the gaps between conditions would hold.</li>
       <li><strong>One prompt per condition.</strong> The same prompt went to every model, which keeps the comparison fair. But llama copying the example shows that prompt wording affects the scores.</li>
       <li><strong>One run per answer.</strong> Temperature 0 and a fixed seed make runs repeatable, but they don't show how much answers would vary.</li>
     </ul>
-    <p class="built"><strong>How I built it.</strong> I planned the project, chose the data and the three conditions, ran every model on my own laptop, and made the calls on what counted as right. I used an AI coding assistant as a pair programmer: it helped draft the harness, the scripts and most of the question set from my plan, and explained each piece so I could check it and change it.</p>
+    <p class="muted" style="max-width:70ch"><strong>How I built it.</strong> I planned the project, chose the data and the three conditions, ran every model on my own laptop, and made the calls on what counted as right. I used an AI coding assistant as a pair programmer: it helped draft the harness, the scripts and most of the question set from my plan, and explained each piece so I could check it and change it.</p>
   </div>
 </section>
 
-<section id="role">
-  <div class="container">
-    <div class="eyebrow">For your team</div>
+<section id="applies">
+  <div class="wrap">
     <h2>How this applies to your role</h2>
-    <div class="bring three">
-      <div class="fit">
-        <span class="role-tag">Analytics engineer</span>
-        <p>Define each metric once in dbt and a semantic layer, so dashboards, analysts and AI tools all return the same number.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">AI / ML evaluation</span>
-        <p>Build a test set with checked answer keys, compare setups fairly, and report accuracy with confidence intervals instead of a single score.</p>
-      </div>
-      <div class="fit">
-        <span class="role-tag">Data team adopting AI</span>
-        <p>Know where an AI answer can be trusted, and add guardrails such as a semantic layer and human review where it can't.</p>
-      </div>
+    <div class="three">
+      <div><h3>Analytics engineer</h3><p>Define each metric once in dbt and a semantic layer, so dashboards, analysts and AI tools all return the same number.</p></div>
+      <div><h3>AI / ML evaluation</h3><p>Build a test set with checked answer keys, compare setups fairly, and report accuracy with confidence intervals instead of a single score.</p></div>
+      <div><h3>Data team adopting AI</h3><p>Know where an AI answer can be trusted, and add guardrails such as a semantic layer and human review where it can't.</p></div>
     </div>
   </div>
 </section>
 
+<nav class="next" aria-label="More projects">
+  <div class="wrap">
+    <a href="../index.html#work">← All projects</a>
+    <a href="contoso-retail-analytics.html">Next: Contoso Retail Analytics →</a>
+  </div>
+</nav>
+
+</main>
+
 <footer>
-  <div class="container">
-    <a href="../index.html">← Back to portfolio</a>
+  <div class="wrap">
+    <span>© 2026 Liam Haydon</span>
     <span>Data: Olist, Brazilian E-Commerce Public Dataset (Kaggle, CC BY-NC-SA 4.0).</span>
   </div>
 </footer>
@@ -368,7 +300,7 @@
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H }, box);
     var x = function (v) { return L + (W - L - R) * v / 100; };
     [0, 25, 50, 75, 100].forEach(function (t) {
-      el("line", { x1: x(t), x2: x(t), y1: top, y2: H - 20, stroke: "var(--grid)", "stroke-width": 1 }, svg);
+      el("line", { x1: x(t), x2: x(t), y1: top, y2: H - 20, stroke: "var(--line)", "stroke-width": 1 }, svg);
       el("text", { x: x(t), y: H - 4, "text-anchor": "middle" }, svg, t + "%");
     });
     acc.forEach(function (g, gi) {
@@ -401,7 +333,7 @@
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H }, box);
     var x = function (v) { return L + (W - L - R) * v / max; };
     [0, 10, 20, 30].forEach(function (t) {
-      el("line", { x1: x(t), x2: x(t), y1: top + head, y2: H - 20, stroke: "var(--grid)", "stroke-width": 1 }, svg);
+      el("line", { x1: x(t), x2: x(t), y1: top + head, y2: H - 20, stroke: "var(--line)", "stroke-width": 1 }, svg);
       el("text", { x: x(t), y: H - 4, "text-anchor": t === 0 && narrow ? "start" : "middle" }, svg, t);
     });
     fail.forEach(function (f, i) {
