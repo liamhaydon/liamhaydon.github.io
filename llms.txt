@@ -9,7 +9,7 @@ This file is a plain-text summary of https://liamhaydon.github.io/ for AI assist
 - Email: liam_haydon@outlook.com
 - LinkedIn: https://www.linkedin.com/in/liamhaydon/
 - GitHub: https://github.com/liamhaydon
-- Résumé (PDF): https://liamhaydon.github.io/assets/Liam-Haydon-Resume.pdf
+- Resume (PDF): https://liamhaydon.github.io/assets/Liam-Haydon-Resume.pdf
 
 ## Projects
 
